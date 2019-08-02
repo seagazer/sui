@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="colorDimLight">#80000000</color>
+    <color name="colorDimDark">#BF000000</color>
+
+    <color name="textDefault">#EEEEEE</color>
+
+    <color name="gray_700">#455a64</color>
+    <color name="gray_800">#455a64</color>
+    <color name="gray_900">#455a64</color>
+
+    <color name="brown_700">#616161</color>
+    <color name="brown_800">#424242</color>
+    <color name="brown_900">#212121</color>
+
+    <color name="orange_700">#e64a19</color>
+    <color name="orange_800">#d84315</color>
+    <color name="orange_900">#bf360c</color>
+
+    <color name="blue_700">#0097a7</color>
+    <color name="blue_800">#00838f</color>
+    <color name="blue_900">#006064</color>
+
+    <color name="yellow_700">#fbc02d</color>
+    <color name="yellow_800">#f9a825</color>
+    <color name="yellow_900">#f57f17</color>
+
+    <color name="pink_700">#c2185b</color>
+    <color name="pink_800">#ad1457</color>
+    <color name="pink_900">#880e4f</color>
+
+
+    <!--          not used below          -->
+
+
+    <color name="green_700">#388e3c</color>
+    <color name="green_800">#2e7d32</color>
+    <color name="green_900">#1b5e20</color>
+
+    <color name="purple_700">#512da8</color>
+    <color name="purple_800">#4527a0</color>
+    <color name="purple_900">#311b92</color>
+
+</resources>

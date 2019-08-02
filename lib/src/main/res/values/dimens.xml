@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="logoTitle">40dp</dimen>//logo动画文字
+
+    <dimen name="cardCorner">2dp</dimen>//卡片圆角
+    <dimen name="cardContentPadding">12dp</dimen>//卡片四周边距
+    <dimen name="cardListMargin">8dp</dimen>//列表中卡片的间距
+    <dimen name="cardTitleBig">14sp</dimen>//卡片大标题
+    <dimen name="cardTitleSmall">12sp</dimen>//卡片小标题
+    <dimen name="cardContent">12sp</dimen>//卡片内容字体
+    <dimen name="cardContentLineSpace">2sp</dimen>//卡片内容行间距
+
+    <dimen name="contentTitleBig">34sp</dimen>
+    <dimen name="contentTitleSmall">24sp</dimen>
+    <dimen name="browseLaneTitle">20sp</dimen>
+    <dimen name="subHead">16sp</dimen>
+    <dimen name="buttonLabel">14sp</dimen>
+
+    <dimen name="listItemText">14sp</dimen>
+    <dimen name="secondaryText">12sp</dimen>
+
+    <dimen name="contentTitleBigLineSpace">40sp</dimen>
+    <dimen name="contentTitleSmallLineSpace">32sp</dimen>
+    <dimen name="contentLineSpace">24sp</dimen>
+
+    <dimen name="contentPadding">16dp</dimen>
+    <dimen name="contentMargin">16dp</dimen>
+
+</resources>

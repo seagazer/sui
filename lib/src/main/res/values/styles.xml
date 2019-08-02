@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="focusable">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+    </style>
+
+    <attr name="animDuration" format="integer" />
+    <attr name="textSize" format="dimension" />
+    <attr name="textColor" format="color" />
+
+    <declare-styleable name="BackgroundView">
+        <attr name="defaultDrawable" format="reference" />
+        <attr name="animDuration" />
+        <attr name="animDelay" format="integer" />
+        <attr name="filterColor" format="color" />
+        <attr name="isColorFilter" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="LoadingView">
+        <attr name="animDuration" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="foregroundColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="AnimLogoView">
+        <attr name="logoName" format="string" />
+        <attr name="autoPlay" format="boolean" />
+        <attr name="offsetAnimDuration" format="integer" />
+        <attr name="gradientAnimDuration" format="integer" />
+        <attr name="textColor" />
+        <attr name="gradientColor" format="color" />
+        <attr name="textSize" />
+        <attr name="textPadding" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="BaseCardView">
+        <attr name="highLightColor" format="color" />
+        <attr name="dimColor" format="color" />
+        <attr name="textSize" />
+        <attr name="textColor" />
+    </declare-styleable>
+
+</resources>

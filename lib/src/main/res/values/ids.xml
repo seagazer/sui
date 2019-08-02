@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="highlight" type="id" />
+    <item name="normal" type="id" />
+    <item name="homeTitle" type="id" />
+    <item name="homeArtist" type="id" />
+
+</resources>
