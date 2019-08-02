@@ -28,9 +28,9 @@ public abstract class BasePresenter<T> extends RecyclerView.Adapter<BasePresente
         bindView(holder, position);
     }
 
-    public abstract BasePresenterHolder createView(@NonNull ViewGroup parent, int viewType);
+    protected abstract BasePresenterHolder createView(@NonNull ViewGroup parent, int viewType);
 
-    public abstract void bindView(@NonNull BasePresenter.BasePresenterHolder holder, int position);
+    protected abstract void bindView(@NonNull BasePresenter.BasePresenterHolder holder, int position);
 
     @Override
     public int getItemCount() {

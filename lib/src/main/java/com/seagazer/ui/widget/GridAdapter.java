@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.seagazer.ui.R;
 import com.seagazer.ui.util.Logger;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +31,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
     public static final int TYPE_ROW = 0;
     public static final int TYPE_COLUMN = 1;
 
+    @Retention(RetentionPolicy.SOURCE)
     @IntDef(value = {TYPE_ROW, TYPE_COLUMN})
     @interface GridType {
     }

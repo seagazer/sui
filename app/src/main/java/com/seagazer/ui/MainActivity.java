@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private GridAdapter.OnItemSelectListener onItemSelectListener = new GridAdapter.OnItemSelectListener() {
         @Override
         public void onItemSelect(int rowPosition, int position, View view, Object item) {
-            ToastUtil.showShortToast(MainActivity.this, "select :" + rowPosition + "-" + position + ", mData =" + item);
+//            ToastUtil.showShortToast(MainActivity.this, "select :" + rowPosition + "-" + position + ", mData =" + item);
         }
     };
 
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 if (mRowAdapter == null) {
                     mRowAdapter = new GridAdapter(GridAdapter.TYPE_ROW);
                     // create rows
-                    for (int i = 0; i < 3; i++) {
+                    for (int i = 0; i < 10; i++) {
                         ExamplePresenter presenter = new ExamplePresenter();
                         presenter.setData(mData);
                         Grid row = new Grid(null, presenter);
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 if (mColumnAdapter == null) {
                     mColumnAdapter = new GridAdapter(GridAdapter.TYPE_COLUMN);
                     // create columns
-                    for (int i = 0; i < 5; i++) {
+                    for (int i = 0; i < 10; i++) {
                         ExamplePresenter presenter = new ExamplePresenter();
                         presenter.setData(mData);
                         Grid column = new Grid(null, presenter);

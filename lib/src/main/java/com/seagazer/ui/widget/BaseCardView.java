@@ -63,15 +63,15 @@ public abstract class BaseCardView extends CardView {
         setClickable(true);
     }
 
-    abstract int getRootViewId();
+    protected abstract int getRootViewId();
 
-    abstract int getImageId();
+    protected abstract int getImageId();
 
-    abstract int getTextContainerId();
+    protected abstract int getTextContainerId();
 
-    abstract int getTitleId();
+    protected abstract int getTitleId();
 
-    abstract int getSubTitleId();
+    protected abstract int getSubTitleId();
 
     @Override
     protected void onFocusChanged(boolean gainFocus, int direction, @Nullable Rect previouslyFocusedRect) {
@@ -84,7 +84,7 @@ public abstract class BaseCardView extends CardView {
         }
     }
 
-    private void highlight() {
+    public void highlight() {
         if (checkNonNull(mImage)) {
             if (mImage instanceof DimmerImageView) {
                 ((DimmerImageView) mImage).highlight();
@@ -98,7 +98,7 @@ public abstract class BaseCardView extends CardView {
         }
     }
 
-    private void dim() {
+    public void dim() {
         if (checkNonNull(mImage)) {
             if (mImage instanceof DimmerImageView) {
                 ((DimmerImageView) mImage).dim();
@@ -130,7 +130,7 @@ public abstract class BaseCardView extends CardView {
         }
     }
 
-    abstract void loadImage(ImageView view, String imagePath);
+    protected abstract void loadImage(ImageView view, String imagePath);
 
     private boolean checkNonNull(View view) {
         if (view == null) {

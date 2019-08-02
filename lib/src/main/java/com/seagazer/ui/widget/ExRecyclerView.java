@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * then it can resume the focus if it gainFocus again.
  */
 public class ExRecyclerView extends RecyclerView {
-    private static final int KEY_DROP = 100;
+    private static final int KEY_DROP = 200;
     private int mFocusPosition;
     private boolean isFocusMemory = true;
     private Handler mKey = new Handler();
