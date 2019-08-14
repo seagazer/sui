@@ -249,7 +249,7 @@ public class AnimLogoView extends View {
         initLogoCoordinate();
     }
 
-    public void setOffetAnimDuration(int duration) {
+    public void setOffsetAnimDuration(int duration) {
         mOffsetDuration = duration;
     }
 

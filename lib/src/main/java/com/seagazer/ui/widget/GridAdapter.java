@@ -26,7 +26,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
     private List<Grid> mGrids = new ArrayList<>();
     private OnItemClickListener mItemClickListener;
     private OnItemSelectListener mItemSelectListener;
-    private RecyclerView.RecycledViewPool mRecycledPool;
+//    private RecyclerView.RecycledViewPool mRecycledPool;
     private int mGridType;
     public static final int TYPE_ROW = 0;
     public static final int TYPE_COLUMN = 1;
@@ -38,7 +38,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
 
     public GridAdapter(@GridType int type) {
         this.mGridType = type;
-        mRecycledPool = new RecyclerView.RecycledViewPool();
+//        mRecycledPool = new RecyclerView.RecycledViewPool();
     }
 
     public void addGrid(Grid grid) {
@@ -120,7 +120,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
             final BasePresenter adapter = grid.getPresenter();
             holder.recyclerView.setAdapter(adapter);
             holder.recyclerView.setHasFixedSize(true);
-            holder.recyclerView.setRecycledViewPool(mRecycledPool);
+            // This may cause show the wrong layout when has recycle the view
+//            holder.recyclerView.setRecycledViewPool(mRecycledPool);
             // set a tag, not to setup column anymore
             holder.recyclerView.setTag(adapter);
             //intercept
