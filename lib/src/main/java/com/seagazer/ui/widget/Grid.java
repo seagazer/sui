@@ -2,9 +2,9 @@ package com.seagazer.ui.widget;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class Grid {
+public class Grid<T extends BasePresenter> {
     private String mTitle;
-    private BasePresenter mPresenter;
+    private T mPresenter;
     private boolean isAlignCenter;
     private boolean isFocusMemory;
     private int mIndex;
@@ -13,7 +13,7 @@ public class Grid {
     private int[] mFirstInterceptDirections;
     private int[] mLastInterceptDirections;
 
-    public Grid(String title, BasePresenter presenter) {
+    public Grid(String title, T presenter) {
         this.mTitle = title;
         this.mPresenter = presenter;
     }
@@ -42,7 +42,7 @@ public class Grid {
         return mIndex;
     }
 
-    public BasePresenter getPresenter() {
+    public T getPresenter() {
         return mPresenter;
     }
 
@@ -59,7 +59,7 @@ public class Grid {
         return mAlignCoordinate;
     }
 
-    public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration){
+    public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration) {
         this.mItemDecoration = itemDecoration;
     }
 

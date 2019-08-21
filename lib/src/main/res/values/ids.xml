@@ -2,7 +2,4 @@
 <resources>
     <item name="highlight" type="id" />
     <item name="normal" type="id" />
-    <item name="homeTitle" type="id" />
-    <item name="homeArtist" type="id" />
-
 </resources>

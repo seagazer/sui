@@ -92,7 +92,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
             holder.title.setText(grid.getTitle());
         }
         if (holder.recyclerView.getTag() == null) {
-            Logger.d("bind column");
             Context context = holder.recyclerView.getContext();
             // setup layoutManager
             int orientation = LinearLayoutManager.HORIZONTAL;
@@ -121,7 +120,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
             holder.recyclerView.setAdapter(adapter);
             holder.recyclerView.setHasFixedSize(true);
             // This may cause show the wrong layout when has recycle the view
-//            holder.recyclerView.setRecycledViewPool(mRecycledPool);
+//             holder.recyclerView.setRecycledViewPool(mRecycledPool);
             // set a tag, not to setup column anymore
             holder.recyclerView.setTag(adapter);
             //intercept
