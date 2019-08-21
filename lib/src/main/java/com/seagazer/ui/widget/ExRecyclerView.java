@@ -15,10 +15,12 @@ import com.seagazer.ui.util.Logger;
 import java.util.ArrayList;
 
 /**
- * An extension recyclerView.
- * If this recyclerView has a focused child, the child will be draw last.
- * Use {@link #setFocusMemory(boolean)} to cache the focused view when recyclerView lost focus,
- * then it can resume the focus if it gainFocus again.
+ * 针对焦点扩展的RecyclerView
+ * 如果该RecyclerView拥有一个聚焦的View，该View自动保持最后绘制
+ * 自动过滤过快的按键事件200ms(最多按键5次/s)
+ * 通过调用{@link #setFocusMemory(boolean)}设置焦点记忆状态
+ * 通过调用{@link #interceptFirstChild(int...)} 设置第一个Child的拦截事件方向
+ * 通过调用{@link #interceptLastChild(int...)} 设置第一个Child的拦截事件方向
  */
 public class ExRecyclerView extends RecyclerView {
     private static final int KEY_DROP = 200;
@@ -42,9 +44,9 @@ public class ExRecyclerView extends RecyclerView {
     }
 
     /**
-     * Set true to cache the focused view when recyclerView lost focus
+     * 设置是否焦点记忆
      *
-     * @param focusMemory Cache the focused or not
+     * @param focusMemory 是否焦点记忆
      */
     public void setFocusMemory(boolean focusMemory) {
         isFocusMemory = focusMemory;
@@ -68,6 +70,9 @@ public class ExRecyclerView extends RecyclerView {
         Logger.d("focus = " + mFocusPosition);
     }
 
+    /**
+     * 恢复焦点
+     */
     public void resumeFocus() {
         if (getLayoutManager() != null) {
             View focused = getLayoutManager().findViewByPosition(mFocusPosition);
@@ -91,10 +96,20 @@ public class ExRecyclerView extends RecyclerView {
         super.addFocusables(views, direction, focusableMode);
     }
 
+    /**
+     * 拦截第一个Child View
+     *
+     * @param directions 拦截按键事件方向
+     */
     public void interceptFirstChild(int... directions) {
         mFirstInterceptDirections = directions;
     }
 
+    /**
+     * 拦截最后一个Child View
+     *
+     * @param directions 拦截按键事件方向
+     */
     public void interceptLastChild(int... directions) {
         mLastInterceptDirections = directions;
     }

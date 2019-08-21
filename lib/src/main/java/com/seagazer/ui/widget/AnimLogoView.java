@@ -23,6 +23,11 @@ import com.seagazer.ui.R;
 import com.seagazer.ui.util.Constants;
 import com.seagazer.ui.util.Logger;
 
+/**
+ * 提供开屏logo动画效果
+ * 可以通过调用{@link #setLogoName(String)}设置logo名称
+ * 通过调用{@link #playAnimation()}开启logo动画
+ */
 public class AnimLogoView extends View {
     private static final String DEFAULT_LOGO = "SEAGAZER";
     private static final int DEFAULT_TEXT_PADDING = 10;
@@ -166,6 +171,9 @@ public class AnimLogoView extends View {
         return mOffsetAnimator;
     }
 
+    /**
+     * 开启动画
+     */
     public void playAnimation() {
         if (getVisibility() == VISIBLE) {
             if (mOffsetAnimator.isRunning()) {
@@ -243,6 +251,11 @@ public class AnimLogoView extends View {
         }
     }
 
+    /**
+     * 设置logo名
+     *
+     * @param logoName logo名称
+     */
     public void setLogoName(String logoName) {
         fillLogoTextArray(logoName);
         // if set the new logoName, should refresh the coordinate again
@@ -257,14 +270,29 @@ public class AnimLogoView extends View {
         mGradientDuration = duration;
     }
 
+    /**
+     * 设置logo字体边距
+     *
+     * @param padding 字体边距
+     */
     public void setTextPadding(int padding) {
         mTextPadding = padding;
     }
 
+    /**
+     * 设置logo字体颜色
+     *
+     * @param color 字体颜色
+     */
     public void setTextColor(int color) {
         mTextColor = color;
     }
 
+    /**
+     * 设置logo字体大小
+     *
+     * @param size 字体大小
+     */
     public void setTextSize(int size) {
         mTextSize = size;
     }

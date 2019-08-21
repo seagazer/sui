@@ -16,6 +16,10 @@ import androidx.cardview.widget.CardView;
 import com.seagazer.ui.R;
 import com.seagazer.ui.util.Logger;
 
+/**
+ * 海报视图基类
+ * 提供海报图，标题，子标题结构的视图
+ */
 public abstract class BaseCardView extends CardView {
     protected int mHighLightColor;
     protected int mDimColor;

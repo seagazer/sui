@@ -8,6 +8,9 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import com.seagazer.ui.R;
 
+/**
+ * 带有遮罩层的ImageView
+ */
 public class DimmerImageView extends AppCompatImageView {
     private int mDimColor;
 
@@ -25,10 +28,16 @@ public class DimmerImageView extends AppCompatImageView {
         dim();
     }
 
+    /**
+     * 高亮显示
+     */
     public void highlight() {
         clearColorFilter();
     }
 
+    /**
+     * 昏暗显示
+     */
     public void dim() {
         setColorFilter(mDimColor);
     }

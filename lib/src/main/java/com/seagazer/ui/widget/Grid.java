@@ -2,6 +2,11 @@ package com.seagazer.ui.widget;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * 行或者列的视图提供者
+ *
+ * @param <T> 视图及内容绑定提供者
+ */
 public class Grid<T extends BasePresenter> {
     private String mTitle;
     private T mPresenter;
@@ -18,59 +23,111 @@ public class Grid<T extends BasePresenter> {
         this.mPresenter = presenter;
     }
 
+    /**
+     * 设置是否居中聚焦
+     *
+     * @param alignCenter 是否居中聚焦
+     */
     public void setAlignCenter(boolean alignCenter) {
         this.isAlignCenter = alignCenter;
     }
 
+    /**
+     * @return 是否居中聚焦
+     */
     public boolean isAlignCenter() {
         return isAlignCenter;
     }
 
+    /**
+     * 是否记忆焦点
+     *
+     * @param focusMemory 是否记忆焦点
+     */
     public void setFocusMemory(boolean focusMemory) {
         isFocusMemory = focusMemory;
     }
 
+    /**
+     * @return 是否记忆焦点
+     */
     public boolean isFocusMemory() {
         return isFocusMemory;
     }
 
+    /**
+     * 设置行或列的索引
+     *
+     * @param index 行或列的索引值
+     */
     public void setIndex(int index) {
         this.mIndex = index;
     }
 
+    /**
+     * @return 当前行或列的索引值
+     */
     public int getIndex() {
         return mIndex;
     }
 
+    /**
+     * @return 行或列的视图提供者
+     */
     public T getPresenter() {
         return mPresenter;
     }
 
+    /**
+     * @return 行或列的标题
+     */
     public String getTitle() {
         return mTitle;
     }
 
+    /**
+     * 设置聚焦对齐坐标
+     *
+     * @param alignCoordinate 对齐坐标
+     */
     public void setAlignCoordinate(int alignCoordinate) {
         this.isAlignCenter = false;
         this.mAlignCoordinate = alignCoordinate;
     }
 
+    /**
+     * @return 对齐坐标
+     */
     public int getAlignCoordinate() {
         return mAlignCoordinate;
     }
 
+    /**
+     * 设置装饰边距
+     *
+     * @param itemDecoration 装饰边距
+     */
     public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration) {
         this.mItemDecoration = itemDecoration;
     }
 
+    /**
+     * @return 装饰边距
+     */
     public RecyclerView.ItemDecoration getItemDecoration() {
         return mItemDecoration;
     }
 
+    /**
+     * {@link ExRecyclerView#interceptFirstChild(int...)}
+     */
     public void interceptFirstChild(int... directions) {
         mFirstInterceptDirections = directions;
     }
 
+    /**
+     * {@link ExRecyclerView#interceptLastChild(int...)}
+     */
     public void interceptLastChild(int... directions) {
         mLastInterceptDirections = directions;
     }

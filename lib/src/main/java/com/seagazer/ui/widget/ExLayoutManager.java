@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * An extension layoutManager.
- * First you must give the itemView focusable, you can call {@link #setAlignCenter(boolean)} that the select item will auto scroll to the center if can scroll,
- * and call {@link #setAlignX(int)} or {@link #setAlignY(int)} to set the end coordinate that the select item will auto scroll to.
+ * 针对焦点扩展的LayoutManager
+ * 首先必须设置ItemView为可聚焦状态，并且通过调用{@link #setAlignCenter(boolean)}让当前聚焦的ItemView始终保持中间滑动
+ * 或者调用{@link #setAlignX(int)} or {@link #setAlignY(int)}设置当前聚焦的ItemView滑动保持位置
  */
 public class ExLayoutManager extends LinearLayoutManager {
     private int mAlignX = 0;
@@ -60,9 +60,9 @@ public class ExLayoutManager extends LinearLayoutManager {
     }
 
     /**
-     * Set the end scrolled coordinate of select view
+     * 设置当前聚焦View的水平滑动保持位置
      *
-     * @param alignX Horizontal coordinate of the end scrolled
+     * @param alignX 水平滑动保持位置px
      */
     public void setAlignX(@IntRange(from = 0) int alignX) {
         isAlignCenter = false;
@@ -70,9 +70,9 @@ public class ExLayoutManager extends LinearLayoutManager {
     }
 
     /**
-     * Set the end scrolled coordinate of select view
+     * 设置当前聚焦View的垂直滑动保持位置
      *
-     * @param alignY Vertical coordinate of the end scrolled
+     * @param alignY 垂直滑动保持位置px
      */
     public void setAlignY(@IntRange(from = 0) int alignY) {
         isAlignCenter = false;
@@ -80,9 +80,9 @@ public class ExLayoutManager extends LinearLayoutManager {
     }
 
     /**
-     * If set true the select view will scroll to the center of parent when scroll end
+     * 设置当前聚焦View的滑动后保持中间位置
      *
-     * @param alignCenter Is auto scroll to the center of parent
+     * @param alignCenter 是否保持居中位置
      */
     public void setAlignCenter(boolean alignCenter) {
         isAlignCenter = alignCenter;

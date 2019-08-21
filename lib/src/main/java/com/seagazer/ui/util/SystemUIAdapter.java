@@ -6,8 +6,16 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+/**
+ * 系统UI适配器
+ */
 public class SystemUIAdapter {
 
+    /**
+     * 适配状态栏
+     *
+     * @param window 当前需要适配的window
+     */
     public static void adjustSystemUI(Window window) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

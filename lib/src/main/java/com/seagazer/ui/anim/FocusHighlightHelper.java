@@ -8,20 +8,28 @@ import com.seagazer.ui.R;
 import com.seagazer.ui.util.Constants;
 import com.seagazer.ui.util.DensityConverter;
 
-
+/**
+ * 焦点缩放动效辅助
+ */
 public class FocusHighlightHelper {
 
-    public void animFocus(View card, boolean hasFocus) {
+    /**
+     * 聚焦动画
+     *
+     * @param view     当前执行动画的view
+     * @param hasFocus 聚焦状态
+     */
+    public void animFocus(View view, boolean hasFocus) {
         int animId = hasFocus ? R.id.highlight : R.id.normal;
         float animValue = hasFocus ? 1.2f : 1.0f;
-        float z = hasFocus ? DensityConverter.dp2px(card.getContext(), 6) : 0;
-        float y = hasFocus ? DensityConverter.dp2px(card.getContext(), 10) : 0;
+        float z = hasFocus ? DensityConverter.dp2px(view.getContext(), 6) : 0;
+        float y = hasFocus ? DensityConverter.dp2px(view.getContext(), 10) : 0;
         AnimatorSet set;
-        if ((set = (AnimatorSet) card.getTag(animId)) == null) {
+        if ((set = (AnimatorSet) view.getTag(animId)) == null) {
             set = new AnimatorSet();
-            ObjectAnimator scaleX = ObjectAnimator.ofFloat(card, "scaleX", animValue);
-            ObjectAnimator scaleY = ObjectAnimator.ofFloat(card, "scaleY", animValue);
-            ObjectAnimator translationZ = ObjectAnimator.ofFloat(card, "translationZ", z);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", animValue);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", animValue);
+            ObjectAnimator translationZ = ObjectAnimator.ofFloat(view, "translationZ", z);
             set.playTogether(scaleX, scaleY, translationZ);
             set.setDuration(Constants.ANIM_SHORT_DURATION);
         }
@@ -29,7 +37,7 @@ public class FocusHighlightHelper {
             set.cancel();
         }
         set.start();
-        card.setTag(animId, set);
+        view.setTag(animId, set);
     }
 
 }

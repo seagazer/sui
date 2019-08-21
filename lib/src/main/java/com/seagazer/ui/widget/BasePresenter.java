@@ -12,6 +12,11 @@ import com.seagazer.ui.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 行列视图及数据绑定提供者-基类
+ *
+ * @param <T> 数据类型
+ */
 public abstract class BasePresenter<T> extends RecyclerView.Adapter<BasePresenter.BasePresenterHolder> {
     private List<T> mData = new ArrayList<>();
     private OnSubItemClickListener mSubItemClickListener;
@@ -37,6 +42,10 @@ public abstract class BasePresenter<T> extends RecyclerView.Adapter<BasePresente
         return mData.size();
     }
 
+    /**
+     * 视图-基类
+     * {@link RecyclerView.ViewHolder}
+     */
     public abstract class BasePresenterHolder extends RecyclerView.ViewHolder {
         TextView textView;
 
@@ -69,35 +78,44 @@ public abstract class BasePresenter<T> extends RecyclerView.Adapter<BasePresente
         public abstract void onItemSelectAction(View view, boolean select);
     }
 
+    /**
+     * 设置数据
+     *
+     * @param data 数据
+     */
     public void setData(List<T> data) {
         this.mData = data;
     }
 
+    /**
+     * @param position 索引值
+     * @return 该索引值对应的数据
+     */
     public T getData(int position) {
         return mData.get(position);
     }
 
-    public void setOnSubItemClickListener(OnSubItemClickListener onSubItemClickListener) {
+    void setOnSubItemClickListener(OnSubItemClickListener onSubItemClickListener) {
         this.mSubItemClickListener = onSubItemClickListener;
     }
 
-    public OnSubItemClickListener getOnSubItemClickListener() {
+    OnSubItemClickListener getOnSubItemClickListener() {
         return mSubItemClickListener;
     }
 
-    public void setOnSubItemSelectListener(OnSubItemSelectListener onSubItemSelectListener) {
+    void setOnSubItemSelectListener(OnSubItemSelectListener onSubItemSelectListener) {
         this.mSubItemSelectListener = onSubItemSelectListener;
     }
 
-    public OnSubItemSelectListener getOnSubItemSelectListener() {
+    OnSubItemSelectListener getOnSubItemSelectListener() {
         return mSubItemSelectListener;
     }
 
-    public interface OnSubItemClickListener {
+    interface OnSubItemClickListener {
         void onSubItemClick(View view, int position);
     }
 
-    public interface OnSubItemSelectListener {
+    interface OnSubItemSelectListener {
         void onSubItemSelect(View view, int position);
     }
 

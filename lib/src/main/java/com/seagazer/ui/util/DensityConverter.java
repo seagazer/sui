@@ -3,6 +3,9 @@ package com.seagazer.ui.util;
 import android.content.Context;
 import android.util.TypedValue;
 
+/**
+ * 单位转换器
+ */
 public class DensityConverter {
 
     public static int dp2px(Context context, float dp) {

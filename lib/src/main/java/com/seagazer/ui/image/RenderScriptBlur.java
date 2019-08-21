@@ -7,9 +7,22 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 
+import androidx.annotation.IntRange;
+
+/**
+ * 提供虚化图功能
+ */
 public class RenderScriptBlur {
 
-    public static Bitmap blur(Context context, Bitmap bitmap, int radius) {
+    /**
+     * 虚化图片
+     *
+     * @param context 上下文
+     * @param bitmap  原始图片
+     * @param radius  虚化力度(0, 25]
+     * @return 虚化后的图片
+     */
+    public static Bitmap blur(Context context, Bitmap bitmap, @IntRange(from = 0, to = 25) int radius) {
         //Let's create an empty bitmap with the same size of the bitmap we want to fastBlur
         int width = bitmap.getWidth();
         int height = bitmap.getWidth() / 16 * 9;

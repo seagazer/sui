@@ -19,7 +19,9 @@ import com.seagazer.ui.R;
 import com.seagazer.ui.util.Constants;
 
 
-// Silence
+/**
+ * 加载进度条
+ */
 public class LoadingView extends View implements ValueAnimator.AnimatorUpdateListener {
     private Paint mForegroundPaint;
     private Paint mBackgroundPaint;
@@ -125,6 +127,9 @@ public class LoadingView extends View implements ValueAnimator.AnimatorUpdateLis
         invalidate();
     }
 
+    /**
+     * 显示进度条
+     */
     public void show() {
         if (getAlpha() == 0) {
             animate().alpha(1).setDuration(500).start();
@@ -135,6 +140,9 @@ public class LoadingView extends View implements ValueAnimator.AnimatorUpdateLis
         }
     }
 
+    /**
+     * 隐藏进度条
+     */
     public void dismiss() {
         if (getAlpha() == 1) {
             animate().alpha(0).setDuration(500).start();
@@ -144,14 +152,29 @@ public class LoadingView extends View implements ValueAnimator.AnimatorUpdateLis
         }
     }
 
+    /**
+     * 设置动画时长
+     *
+     * @param duration 动画时长
+     */
     public void setAnimDuration(int duration) {
         mAnimDuration = duration;
     }
 
+    /**
+     * 设置背景色
+     *
+     * @param color 背景色
+     */
     public void setProgressBackgroundColor(int color) {
         mBackgroundColor = color;
     }
 
+    /**
+     * 设置当前进度前景色
+     *
+     * @param color 前景色
+     */
     public void setProgressForegroundColor(int color) {
         mForegroundColor = color;
     }

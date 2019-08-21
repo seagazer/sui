@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.seagazer.ui.R;
-import com.seagazer.ui.util.Logger;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -22,11 +21,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 提供多行或者多列视图的适配器
+ */
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
     private List<Grid> mGrids = new ArrayList<>();
     private OnItemClickListener mItemClickListener;
     private OnItemSelectListener mItemSelectListener;
-//    private RecyclerView.RecycledViewPool mRecycledPool;
+    //    private RecyclerView.RecycledViewPool mRecycledPool;
     private int mGridType;
     public static final int TYPE_ROW = 0;
     public static final int TYPE_COLUMN = 1;
@@ -36,11 +38,21 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
     @interface GridType {
     }
 
+    /**
+     * 默认构造
+     *
+     * @param type {@link GridType}展现形式：行或者列
+     */
     public GridAdapter(@GridType int type) {
         this.mGridType = type;
 //        mRecycledPool = new RecyclerView.RecycledViewPool();
     }
 
+    /**
+     * 添加行或者列
+     *
+     * @param grid 行或列{@link Grid}
+     */
     public void addGrid(Grid grid) {
         mGrids.add(grid);
         checkAdapterAvailable();
@@ -61,6 +73,11 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
         }
     }
 
+    /**
+     * 移除行或者列
+     *
+     * @param position 行或列对应的索引
+     */
     public void remove(int position) {
         mGrids.remove(position);
         refreshIndex();
@@ -167,12 +184,34 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
         }
     }
 
+    /**
+     * 点击事件监听
+     */
     public interface OnItemClickListener {
-        void onItemClick(int rowPosition, int position, View view, Object item);
+        /**
+         * 点击事件
+         *
+         * @param mainIndex 行或列编号
+         * @param position  所在行或列内的索引
+         * @param view      当前点击的视图
+         * @param item      当前点击视图绑定的数据
+         */
+        void onItemClick(int mainIndex, int position, View view, Object item);
     }
 
+    /**
+     * 选中事件监听
+     */
     public interface OnItemSelectListener {
-        void onItemSelect(int rowPosition, int position, View view, Object item);
+        /**
+         * 选中事件
+         *
+         * @param mainIndex 行或列编号
+         * @param position  所在行或列内的索引
+         * @param view      当前点击的视图
+         * @param item      当前点击视图绑定的数据
+         */
+        void onItemSelect(int mainIndex, int position, View view, Object item);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

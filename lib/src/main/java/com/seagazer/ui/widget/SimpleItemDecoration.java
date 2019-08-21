@@ -6,6 +6,10 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * 提供简单设置的装饰边距
+ * {@link RecyclerView.ItemDecoration}
+ */
 public class SimpleItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mLeft, mTop, mRight, mBottom;

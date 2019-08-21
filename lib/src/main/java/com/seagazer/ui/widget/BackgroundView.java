@@ -28,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A background view to change the bg-image with some special anim.
- * You can call {@link #setBgImage} to change the bg-image, and call {@link #startDance}
- * to playFile the random ripple animation.
+ * 提供切换背景功能的背景墙
+ * 可以通过调用{@link #setBgImage}来改变背景，
+ * 通过调用{@link #startDance}启动随机波纹效果
  */
 public class BackgroundView extends FrameLayout {
     private static final int MSG_REFRESH_IMAGE = 0x0001;
@@ -83,9 +83,9 @@ public class BackgroundView extends FrameLayout {
     }
 
     /**
-     * Change the background image
+     * 更换背景
      *
-     * @param drawable The image to changed
+     * @param drawable 背景图
      */
     public void setBgImage(Drawable drawable) {
         mHandler.removeMessages(MSG_REFRESH_IMAGE);
@@ -93,9 +93,9 @@ public class BackgroundView extends FrameLayout {
     }
 
     /**
-     * Change the background image
+     * 更换背景
      *
-     * @param drawable The image to changed
+     * @param drawable 背景图
      */
     public void setBgImage(Bitmap drawable) {
         mHandler.removeMessages(MSG_REFRESH_IMAGE);
@@ -103,9 +103,9 @@ public class BackgroundView extends FrameLayout {
     }
 
     /**
-     * Add a colorFilter of the background image
+     * 添加背景遮罩
      *
-     * @param color The color of this filter
+     * @param color 遮罩颜色
      */
     public void addColorFilter(int color) {
         isColorFilter = true;
@@ -162,12 +162,22 @@ public class BackgroundView extends FrameLayout {
     }
 
     /**
-     * Start the random ripple of dancing animation
+     * 开启随机波纹效果
      */
     public void startDance() {
         isDancing = true;
         mHandler.sendEmptyMessage(MSG_REFRESH_RIPPLE);
         createRipples();
+    }
+
+    /**
+     * 停止随机波纹效果
+     */
+    public void endDance() {
+        isDancing = false;
+        mHandler.removeMessages(MSG_REFRESH_RIPPLE);
+        mRipples.clear();
+        postInvalidate();
     }
 
     private void createRipples() {
@@ -182,16 +192,6 @@ public class BackgroundView extends FrameLayout {
                 }
             }
         });
-    }
-
-    /**
-     * End the random ripple of dancing animation
-     */
-    public void endDance() {
-        isDancing = false;
-        mHandler.removeMessages(MSG_REFRESH_RIPPLE);
-        mRipples.clear();
-        postInvalidate();
     }
 
     @Override
