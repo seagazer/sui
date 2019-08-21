@@ -9,10 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.seagazer.ui.util.ScreenAdapter;
-import com.seagazer.ui.util.ToastUtil;
+import com.seagazer.ui.widget.ExLayoutManager;
 import com.seagazer.ui.widget.Grid;
 import com.seagazer.ui.widget.GridAdapter;
-import com.seagazer.ui.widget.ExLayoutManager;
 import com.seagazer.ui.widget.SimpleItemDecoration;
 
 import java.util.ArrayList;
@@ -50,13 +49,13 @@ public class MainActivity extends AppCompatActivity {
 
     private GridAdapter.OnItemClickListener onItemClickListener = new GridAdapter.OnItemClickListener() {
         @Override
-        public void onItemClick(int rowPosition, int position, View view, Object item) {
-            ToastUtil.showShortToast(MainActivity.this, "click :" + rowPosition + "-" + position + ", mData =" + item);
+        public void onItemClick(int mainIndex, int position, View view, Object item) {
+            ToastUtil.showShortToast(MainActivity.this, "click :" + mainIndex + "-" + position + ", mData =" + item);
         }
     };
     private GridAdapter.OnItemSelectListener onItemSelectListener = new GridAdapter.OnItemSelectListener() {
         @Override
-        public void onItemSelect(int rowPosition, int position, View view, Object item) {
+        public void onItemSelect(int mainIndex, int position, View view, Object item) {
 //            ToastUtil.showShortToast(MainActivity.this, "select :" + rowPosition + "-" + position + ", mData =" + item);
         }
     };
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < 10; i++) {
                         ExamplePresenter presenter = new ExamplePresenter();
                         presenter.setData(mData);
-                        Grid row = new Grid(null, presenter);
+                        Grid<ExamplePresenter> row = new Grid<>(null, presenter);
                         row.addItemDecoration(new SimpleItemDecoration(5, 1, 5, 1));
                         row.setAlignCenter(true);
                         row.setFocusMemory(true);
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < 10; i++) {
                         ExamplePresenter presenter = new ExamplePresenter();
                         presenter.setData(mData);
-                        Grid column = new Grid(null, presenter);
+                        Grid<ExamplePresenter> column = new Grid<>(null, presenter);
                         column.addItemDecoration(new SimpleItemDecoration(1, 5, 1, 5));
                         column.setAlignCenter(true);
                         column.setFocusMemory(true);
