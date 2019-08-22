@@ -11,24 +11,24 @@ import com.seagazer.ui.anim.FocusHighlightHelper;
 import com.seagazer.ui.widget.BasePresenter;
 
 
-public class ExamplePresenter extends BasePresenter<String> {
+public class ExamplePresenter extends BasePresenter<String, ExamplePresenter.TestRowHolder> {
 
     private FocusHighlightHelper mAnimHelper = new FocusHighlightHelper();
 
     @Override
-    public BasePresenterHolder createView(@NonNull ViewGroup parent, int viewType) {
+    public ExamplePresenter.TestRowHolder createView(@NonNull ViewGroup parent, int viewType) {
         return new ExamplePresenter.TestRowHolder(
                 LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view, parent, false));
     }
 
     @Override
-    public void bindView(@NonNull BasePresenter.BasePresenterHolder holder, int position) {
+    public void bindView(@NonNull ExamplePresenter.TestRowHolder holder, int position) {
         if (holder instanceof TestRowHolder) {
             ((TestRowHolder) holder).textView.setText(getData(position));
         }
     }
 
-    class TestRowHolder extends BasePresenterHolder {
+    class TestRowHolder extends BasePresenter.BasePresenterHolder {
         TextView textView;
 
         TestRowHolder(@NonNull View itemView) {

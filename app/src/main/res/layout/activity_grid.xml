@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".GridActivity">
 
     <Button
         android:id="@+id/horizontal"
@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/sl_focus_test"
         android:onClick="onClick"
-        android:text="Horizontal" />
+        android:text="Horizontal"
+        android:textAllCaps="false" />
 
     <Button
         android:id="@+id/vertical"
@@ -20,7 +21,8 @@
         android:layout_gravity="right"
         android:background="@drawable/sl_focus_test"
         android:onClick="onClick"
-        android:text="Vertical" />
+        android:text="Vertical"
+        android:textAllCaps="false" />
 
     <TextView
         android:id="@+id/current_type"

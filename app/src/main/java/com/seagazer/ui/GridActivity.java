@@ -17,7 +17,7 @@ import com.seagazer.ui.widget.SimpleItemDecoration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class GridActivity extends AppCompatActivity {
     private List<String> mData;
     private GridAdapter mRowAdapter, mColumnAdapter;
     private RecyclerView mRecyclerView;
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         ScreenAdapter.adjustDensity(this, getApplication(), 960);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_grid);
         mCurrentType = findViewById(R.id.current_type);
 
         // generate example data
@@ -50,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
     private GridAdapter.OnItemClickListener onItemClickListener = new GridAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(int mainIndex, int position, View view, Object item) {
-            ToastUtil.showShortToast(MainActivity.this, "click :" + mainIndex + "-" + position + ", mData =" + item);
+            ToastUtil.showShortToast(GridActivity.this, "click :" + mainIndex + "-" + position + ", mData =" + item);
         }
     };
     private GridAdapter.OnItemSelectListener onItemSelectListener = new GridAdapter.OnItemSelectListener() {
         @Override
         public void onItemSelect(int mainIndex, int position, View view, Object item) {
-//            ToastUtil.showShortToast(MainActivity.this, "select :" + rowPosition + "-" + position + ", mData =" + item);
+//            ToastUtil.showShortToast(GridActivity.this, "select :" + rowPosition + "-" + position + ", mData =" + item);
         }
     };
 
