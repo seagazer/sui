@@ -23,7 +23,6 @@ public class FocusHighlightHelper {
         int animId = hasFocus ? R.id.highlight : R.id.normal;
         float animValue = hasFocus ? 1.2f : 1.0f;
         float z = hasFocus ? DensityConverter.dp2px(view.getContext(), 6) : 0;
-        float y = hasFocus ? DensityConverter.dp2px(view.getContext(), 10) : 0;
         AnimatorSet set;
         if ((set = (AnimatorSet) view.getTag(animId)) == null) {
             set = new AnimatorSet();

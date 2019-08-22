@@ -29,6 +29,15 @@ public class DimmerImageView extends AppCompatImageView {
     }
 
     /**
+     * 设置遮罩阴影颜色
+     *
+     * @param color 遮罩颜色
+     */
+    public void setDimColor(int color) {
+        this.mDimColor = color;
+    }
+
+    /**
      * 高亮显示
      */
     public void highlight() {

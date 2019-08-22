@@ -19,6 +19,17 @@ import com.seagazer.ui.util.Logger;
 /**
  * 海报视图基类
  * 提供海报图，标题，子标题结构的视图
+ * +---------------------+
+ * +                     +
+ * +    ***      ***     +
+ * +        image        +
+ * +                     +
+ * +       **  **        +
+ * +         **          +
+ * +---------------------+
+ * +       title         +
+ * +      subTitle       +
+ * +---------------------+
  */
 public abstract class BaseCardView extends CardView {
     protected int mHighLightColor;

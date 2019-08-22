@@ -28,6 +28,7 @@
         <attr name="textSize" />
         <attr name="textColor" />
         <attr name="textPadding" format="dimension" />
+        <attr name="showGradient" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="BaseCardView">

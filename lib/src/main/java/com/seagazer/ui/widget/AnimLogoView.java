@@ -50,6 +50,7 @@ public class AnimLogoView extends View {
     private int mMatrixTranslate;
     private boolean isAutoPlay;
     private int mWidth, mHeight;
+    private boolean isShowGradient;
 
     public AnimLogoView(Context context) {
         this(context, null);
@@ -64,6 +65,7 @@ public class AnimLogoView extends View {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.AnimLogoView);
         String logoName = ta.getString(R.styleable.AnimLogoView_logoName);
         isAutoPlay = ta.getBoolean(R.styleable.AnimLogoView_autoPlay, true);
+        isShowGradient = ta.getBoolean(R.styleable.AnimLogoView_showGradient, false);
         mOffsetDuration = ta.getInt(R.styleable.AnimLogoView_offsetAnimDuration, Constants.ANIM_LOGO_DURATION);
         mGradientDuration = ta.getInt(R.styleable.AnimLogoView_gradientAnimDuration, Constants.ANIM_LOGO_GRADIENT_DURATION);
         mTextColor = ta.getColor(R.styleable.AnimLogoView_textColor, getResources().getColor(R.color.textDefault));
@@ -122,7 +124,7 @@ public class AnimLogoView extends View {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (mGradientAnimator != null) {
+                if (mGradientAnimator != null && isShowGradient) {
                     isOffsetAnimEnd = true;
                     mPaint.setShader(mLinearGradient);
                     mGradientAnimator.start();
@@ -179,6 +181,7 @@ public class AnimLogoView extends View {
             if (mOffsetAnimator.isRunning()) {
                 mOffsetAnimator.cancel();
             }
+            isOffsetAnimEnd = false;
             mOffsetAnimator.start();
         } else {
             Logger.w("The view is not visible, not to playFile the animation .");
@@ -262,12 +265,40 @@ public class AnimLogoView extends View {
         initLogoCoordinate();
     }
 
+    /**
+     * 设置logo文字动效时长
+     *
+     * @param duration 动效时长
+     */
     public void setOffsetAnimDuration(int duration) {
         mOffsetDuration = duration;
     }
 
+    /**
+     * 设置logo文字渐变动效时长
+     *
+     * @param duration 动效时长
+     */
     public void setGradientAnimDuration(int duration) {
         mGradientDuration = duration;
+    }
+
+    /**
+     * 设置logo文字渐变颜色
+     *
+     * @param gradientColor 渐变颜色
+     */
+    public void setGradientColor(int gradientColor) {
+        this.mGradientColor = gradientColor;
+    }
+
+    /**
+     * 设置是否显示logo文字渐变
+     *
+     * @param isShowGradient 是否显示logo渐变动效
+     */
+    public void isShowGradient(boolean isShowGradient) {
+        this.isShowGradient = isShowGradient;
     }
 
     /**
