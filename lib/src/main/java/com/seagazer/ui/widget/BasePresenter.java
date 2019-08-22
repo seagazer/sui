@@ -17,25 +17,25 @@ import java.util.List;
  *
  * @param <T> 数据类型
  */
-public abstract class BasePresenter<T> extends RecyclerView.Adapter<BasePresenter.BasePresenterHolder> {
+public abstract class BasePresenter<T, VH extends BasePresenter.BasePresenterHolder> extends RecyclerView.Adapter<VH> {
     private List<T> mData = new ArrayList<>();
     private OnSubItemClickListener mSubItemClickListener;
     private OnSubItemSelectListener mSubItemSelectListener;
 
     @NonNull
     @Override
-    public BasePresenterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return createView(parent, viewType);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BasePresenter.BasePresenterHolder holder, int position) {
+    public void onBindViewHolder(@NonNull VH holder, int position) {
         bindView(holder, position);
     }
 
-    protected abstract BasePresenterHolder createView(@NonNull ViewGroup parent, int viewType);
+    protected abstract VH createView(@NonNull ViewGroup parent, int viewType);
 
-    protected abstract void bindView(@NonNull BasePresenter.BasePresenterHolder holder, int position);
+    protected abstract void bindView(@NonNull VH holder, int position);
 
     @Override
     public int getItemCount() {

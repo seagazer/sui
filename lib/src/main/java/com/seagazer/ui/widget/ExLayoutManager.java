@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 针对焦点扩展的LayoutManager
- * 首先必须设置ItemView为可聚焦状态，并且通过调用{@link #setAlignCenter(boolean)}让当前聚焦的ItemView始终保持中间滑动
+ * 首先必须设置ItemView为可聚焦状态，可以通过调用{@link #setAlignCenter(boolean)}让当前聚焦的ItemView始终保持中间滑动
  * 或者调用{@link #setAlignX(int)} or {@link #setAlignY(int)}设置当前聚焦的ItemView滑动保持位置
  */
 public class ExLayoutManager extends LinearLayoutManager {

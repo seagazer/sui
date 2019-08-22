@@ -24,16 +24,17 @@ import java.util.Set;
 /**
  * 提供多行或者多列视图的适配器
  * <p>
+ * +Row1+
  * +++---+++---+++---+++---+++---+++---+++---+++---+++
- * +++   +++   +++   +++   Row1   +++   +++  +++   +++
+ * +1+   +2+   +3+   +4+   +5+   +6+   +7+   +8+   +9+
  * +++---+++---+++---+++---+++---+++---+++---+++---+++
- *
+ * +Row2+
  * +++---+++---+++---+++---+++---+++---+++---+++---+++
- * +++   +++   +++   +++   Row2   +++   +++  +++   +++
+ * +1+   +2+   +3+   +4+   +5+   +6+   +7+   +8+   +9+
  * +++---+++---+++---+++---+++---+++---+++---+++---+++
- *
+ * +Row3+
  * +++---+++---+++---+++---+++---+++---+++---+++---+++
- * +++   +++   +++   +++   Row3   +++   +++  +++   +++
+ * +1+   +2+   +3+   +4+   +5+   +6+   +7+   +8+   +9+
  * +++---+++---+++---+++---+++---+++---+++---+++---+++
  */
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
@@ -119,6 +120,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
             holder.title.setVisibility(View.GONE);
         } else {
             holder.title.setText(grid.getTitle());
+            holder.title.setTextSize(grid.getTitleSize());
+            holder.title.setTextColor(grid.getTitleColor());
         }
         if (holder.recyclerView.getTag() == null) {
             Context context = holder.recyclerView.getContext();

@@ -17,16 +17,16 @@ import java.util.ArrayList;
 /**
  * 针对焦点扩展的RecyclerView
  * 如果该RecyclerView拥有一个聚焦的View，该View自动保持最后绘制
- * 自动过滤过快的按键事件200ms(最多按键5次/s)
+ * 默认自动过滤过快的按键事件200ms(最多按键5次/s)
  * 通过调用{@link #setFocusMemory(boolean)}设置焦点记忆状态
  * 通过调用{@link #interceptFirstChild(int...)} 设置第一个Child的拦截事件方向
- * 通过调用{@link #interceptLastChild(int...)} 设置第一个Child的拦截事件方向
+ * 通过调用{@link #interceptLastChild(int...)} 设置最后一个Child的拦截事件方向
  */
 public class ExRecyclerView extends RecyclerView {
-    private static final int KEY_DROP = 200;
+    private int mKeyDrop = 200;
     private int mFocusPosition;
     private boolean isFocusMemory = true;
-    private Handler mKey = new Handler();
+    private Handler mKeyDropHandler = new Handler();
     private int[] mFirstInterceptDirections;
     private int[] mLastInterceptDirections;
 
@@ -52,13 +52,22 @@ public class ExRecyclerView extends RecyclerView {
         isFocusMemory = focusMemory;
     }
 
+    /**
+     * 设置抛弃按键时长
+     *
+     * @param time 按键防抖时长
+     */
+    public void setKeyDrop(int time) {
+        this.mKeyDrop = time;
+    }
+
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (mKey.hasMessages(0)) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN && mKeyDrop != 0) {
+            if (mKeyDropHandler.hasMessages(0)) {
                 return true;
             }
-            mKey.sendEmptyMessageDelayed(0, KEY_DROP);
+            mKeyDropHandler.sendEmptyMessageDelayed(0, mKeyDrop);
         }
         return super.dispatchKeyEvent(event);
     }
@@ -147,10 +156,10 @@ public class ExRecyclerView extends RecyclerView {
         if (view == null) {
             return i;
         } else {
-            int index = indexOfChild(view);
+            int focusIndex = indexOfChild(view);
             if (i == childCount - 1) {
-                return index;
-            } else if (i < index) {
+                return focusIndex;
+            } else if (i < focusIndex) {
                 return i;
             } else {
                 return i + 1;

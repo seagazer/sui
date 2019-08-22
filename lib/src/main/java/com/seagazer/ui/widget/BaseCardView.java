@@ -3,6 +3,7 @@ package com.seagazer.ui.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ public abstract class BaseCardView extends CardView {
     protected View mTextContent;
     protected TextView mTitle;
     protected TextView mSubTitle;
+    private boolean isAutoHighLight = true;
 
     public BaseCardView(@NonNull Context context) {
         this(context, null);
@@ -51,7 +53,6 @@ public abstract class BaseCardView extends CardView {
 
     public BaseCardView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.BaseCardView);
         mHighLightColor = ta.getColor(R.styleable.BaseCardView_highLightColor, getResources().getColor(R.color.gray_700));
         mDimColor = ta.getColor(R.styleable.BaseCardView_dimColor, getResources().getColor(R.color.gray_900));
@@ -59,7 +60,7 @@ public abstract class BaseCardView extends CardView {
         mTextSize = ta.getDimensionPixelSize(R.styleable.BaseCardView_textSize, getResources().getDimensionPixelOffset(R.dimen.cardTitleSmall));
         ta.recycle();
         // inflate view
-        LayoutInflater.from(context).inflate(getRootViewId(), this, true);
+        LayoutInflater.from(context).inflate(getLayoutId(), this, true);
         mImage = findViewById(getImageId());
         mTextContent = findViewById(getTextContainerId());
         mTitle = findViewById(getTitleId());
@@ -78,7 +79,7 @@ public abstract class BaseCardView extends CardView {
         setClickable(true);
     }
 
-    protected abstract int getRootViewId();
+    protected abstract int getLayoutId();
 
     protected abstract int getImageId();
 
@@ -91,15 +92,17 @@ public abstract class BaseCardView extends CardView {
     @Override
     protected void onFocusChanged(boolean gainFocus, int direction, @Nullable Rect previouslyFocusedRect) {
         super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
-        // keep onFocusChangeListener for user
-        if (gainFocus) {
-            highlight();
-        } else {
-            dim();
+        if (isAutoHighLight) {
+            // keep onFocusChangeListener for user
+            if (gainFocus) {
+                highlight();
+            } else {
+                dim();
+            }
         }
     }
 
-    public void highlight() {
+    private void highlight() {
         if (checkNonNull(mImage)) {
             if (mImage instanceof DimmerImageView) {
                 ((DimmerImageView) mImage).highlight();
@@ -113,7 +116,7 @@ public abstract class BaseCardView extends CardView {
         }
     }
 
-    public void dim() {
+    private void dim() {
         if (checkNonNull(mImage)) {
             if (mImage instanceof DimmerImageView) {
                 ((DimmerImageView) mImage).dim();
@@ -127,25 +130,66 @@ public abstract class BaseCardView extends CardView {
         }
     }
 
+    /**
+     * 是否聚焦自动高亮
+     *
+     * @param autoHighLight
+     */
+    public void setAutoHighLight(boolean autoHighLight) {
+        isAutoHighLight = autoHighLight;
+    }
+
+    /**
+     * 设置标题
+     *
+     * @param title 主标题
+     */
     public void setTitle(String title) {
         if (checkNonNull(mTitle)) {
             mTitle.setText(title);
         }
     }
 
+    /**
+     * 设置副标题
+     *
+     * @param title 副标题
+     */
     public void setSubTitle(String title) {
         if (checkNonNull(mSubTitle)) {
             mSubTitle.setText(title);
         }
     }
 
+    /**
+     * 设置图片
+     *
+     * @param path 图片路径
+     */
     public void setImage(String path) {
         if (checkNonNull(mImage)) {
-            loadImage(mImage, path);
+            imageLoader(mImage, path);
         }
     }
 
-    protected abstract void loadImage(ImageView view, String imagePath);
+    /**
+     * 设置图片
+     *
+     * @param drawable 图片资源
+     */
+    public void setImage(Drawable drawable) {
+        if (checkNonNull(mImage)) {
+            mImage.setImageDrawable(drawable);
+        }
+    }
+
+    /**
+     * 自定义图片加载方式
+     *
+     * @param view      图片
+     * @param imagePath 图片路径
+     */
+    protected abstract void imageLoader(ImageView view, String imagePath);
 
     private boolean checkNonNull(View view) {
         if (view == null) {

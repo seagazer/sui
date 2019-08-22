@@ -1,6 +1,7 @@
 package com.seagazer.ui.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
@@ -24,7 +25,9 @@ public class DimmerImageView extends AppCompatImageView {
 
     public DimmerImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mDimColor = getResources().getColor(R.color.colorDimLight);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DimmerImageView);
+        mDimColor = ta.getColor(R.styleable.DimmerImageView_filterColor, getResources().getColor(R.color.colorDimLight));
+        ta.recycle();
         dim();
     }
 

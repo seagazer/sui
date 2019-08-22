@@ -4,12 +4,13 @@
     <attr name="animDuration" format="integer" />
     <attr name="textSize" format="dimension" />
     <attr name="textColor" format="color" />
+    <attr name="filterColor" format="color" />
 
     <declare-styleable name="BackgroundView">
         <attr name="defaultDrawable" format="reference" />
         <attr name="animDuration" />
         <attr name="animDelay" format="integer" />
-        <attr name="filterColor" format="color" />
+        <attr name="filterColor" />
         <attr name="isColorFilter" format="boolean" />
     </declare-styleable>
 
@@ -38,4 +39,7 @@
         <attr name="textColor" />
     </declare-styleable>
 
+    <declare-styleable name="DimmerImageView">
+        <attr name="filterColor" />
+    </declare-styleable>
 </resources>

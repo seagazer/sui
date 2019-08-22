@@ -17,10 +17,38 @@ public class Grid<T extends BasePresenter> {
     private RecyclerView.ItemDecoration mItemDecoration;
     private int[] mFirstInterceptDirections;
     private int[] mLastInterceptDirections;
+    private int mTitleColor;
+    private int mTitleSize;
 
     public Grid(String title, T presenter) {
         this.mTitle = title;
         this.mPresenter = presenter;
+    }
+
+    public int getTitleColor() {
+        return mTitleColor;
+    }
+
+    /**
+     * 设置分类标题颜色
+     *
+     * @param color 分类标题颜色
+     */
+    public void setTitleColor(int color) {
+        this.mTitleColor = color;
+    }
+
+    public int getTitleSize() {
+        return mTitleSize;
+    }
+
+    /**
+     * 设置分类标题字体大小
+     *
+     * @param size 标题字体大小
+     */
+    public void setTitleSize(int size) {
+        this.mTitleSize = size;
     }
 
     /**
