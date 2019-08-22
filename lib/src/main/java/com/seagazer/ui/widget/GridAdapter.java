@@ -78,7 +78,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
      *
      * @param position 行或列对应的索引
      */
-    public void remove(int position) {
+    public void removeGrid(int position) {
         mGrids.remove(position);
         refreshIndex();
         notifyItemRemoved(position);
@@ -127,6 +127,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
                     layoutManager.setAlignY(grid.getAlignCoordinate());
                 }
             }
+            // item decoration
             if (grid.getItemDecoration() != null) {
                 holder.recyclerView.addItemDecoration(grid.getItemDecoration());
             }
