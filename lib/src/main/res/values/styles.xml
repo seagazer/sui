@@ -42,4 +42,9 @@
     <declare-styleable name="DimmerImageView">
         <attr name="filterColor" />
     </declare-styleable>
+
+    <declare-styleable name="DynamicBlurView">
+        <attr name="overlayColor" format="color" />
+        <attr name="blurRadius" format="integer" />
+    </declare-styleable>
 </resources>
