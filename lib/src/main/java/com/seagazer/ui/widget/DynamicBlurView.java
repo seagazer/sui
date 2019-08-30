@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -89,7 +90,12 @@ public class DynamicBlurView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         if (mTarget != null && prepare()) {
-            mTempBitmap.eraseColor(Color.TRANSPARENT);
+            // if set background color ,erase the background color
+            if (mTarget.getBackground() != null && mTarget.getBackground() instanceof ColorDrawable) {
+                mTempBitmap.eraseColor(((ColorDrawable) mTarget.getBackground()).getColor());
+            } else {
+                mTempBitmap.eraseColor(Color.TRANSPARENT);
+            }
             mTarget.draw(mTempCanvas);
             blur();
             canvas.save();
