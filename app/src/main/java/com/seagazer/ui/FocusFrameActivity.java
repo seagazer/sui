@@ -1,7 +1,7 @@
 package com.seagazer.ui;
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
@@ -17,18 +17,19 @@ public class FocusFrameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_focus_frame);
         FrameLayout parent = findViewById(R.id.parent);
-        final FocusHelper helper = new FocusHelper(this, parent);
-        final Handler handler = new Handler();
+        View frame = new View(this);
+        frame.setBackgroundColor(Color.parseColor("#aa00ffff"));
+        final FocusHelper focusHelper = new FocusHelper(parent, frame);
         parent.getViewTreeObserver().addOnGlobalFocusChangeListener(new ViewTreeObserver.OnGlobalFocusChangeListener() {
             @Override
             public void onGlobalFocusChanged(View oldFocus, View newFocus) {
-//                if (oldFocus != null) {
-//                    oldFocus.animate().scaleX(1).scaleY(1).start();
-//                }
-//                if (newFocus != null) {
-//                    newFocus.animate().scaleX(1.2f).scaleY(1.2f).start();
-//                }
-                helper.focusChange(newFocus);
+                if (oldFocus != null) {
+                    oldFocus.animate().scaleX(1).scaleY(1).start();
+                }
+                if (newFocus != null) {
+                    newFocus.animate().scaleX(1.2f).scaleY(1.2f).start();
+                }
+                focusHelper.focusChange(newFocus, 1.2f, 1.2f);
             }
         });
     }

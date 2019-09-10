@@ -53,6 +53,26 @@ public class ExRecyclerView extends RecyclerView {
     }
 
     /**
+     * 获取当前焦点记忆索引
+     *
+     * @return 当前焦点索引
+     */
+    public int getFocusPosition() {
+        return mFocusPosition;
+    }
+
+    /**
+     * 设置焦点索引
+     *
+     * @param position 焦点索引
+     */
+    public void setFocusPosition(int position) {
+        if (position >= 0 && position <= getAdapter().getItemCount() - 1) {
+            mFocusPosition = position;
+        }
+    }
+
+    /**
      * 设置抛弃按键时长
      *
      * @param time 按键防抖时长
