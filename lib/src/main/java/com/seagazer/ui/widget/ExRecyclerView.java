@@ -107,6 +107,13 @@ public class ExRecyclerView extends RecyclerView {
             View focused = getLayoutManager().findViewByPosition(mFocusPosition);
             if (focused != null) {
                 focused.requestFocus();
+            } else {
+                // try to get focused again
+                scrollToPosition(mFocusPosition);
+                focused = getLayoutManager().findViewByPosition(mFocusPosition);
+                if (focused != null) {
+                    focused.requestFocus();
+                }
             }
         }
     }
@@ -119,6 +126,14 @@ public class ExRecyclerView extends RecyclerView {
                 if (focused != null) {
                     views.add(focused);
                     return;
+                } else {
+                    // try to get focused again
+                    scrollToPosition(mFocusPosition);
+                    focused = getLayoutManager().findViewByPosition(mFocusPosition);
+                    if (focused != null) {
+                        views.add(focused);
+                        return;
+                    }
                 }
             }
         }

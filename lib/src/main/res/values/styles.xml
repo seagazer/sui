@@ -47,4 +47,12 @@
         <attr name="overlayColor" format="color" />
         <attr name="blurRadius" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="CircleProgress">
+        <attr name="foregroundColor" format="color" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="textColor" format="color" />
+        <attr name="arcWidth" format="dimension" />
+        <attr name="textSize" format="dimension" />
+    </declare-styleable>
 </resources>
