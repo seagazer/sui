@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="foregroundColor" format="color" />
+    <attr name="backgroundColor" format="color" />
     <attr name="animDuration" format="integer" />
     <attr name="textSize" format="dimension" />
     <attr name="textColor" format="color" />
@@ -16,7 +17,7 @@
 
     <declare-styleable name="LoadingView">
         <attr name="animDuration" />
-        <attr name="backgroundColor" format="color" />
+        <attr name="backgroundColor" />
         <attr name="foregroundColor" />
     </declare-styleable>
 
@@ -50,9 +51,9 @@
 
     <declare-styleable name="CircleProgress">
         <attr name="foregroundColor" />
-        <attr name="backgroundColor" format="color" />
-        <attr name="textColor" format="color" />
+        <attr name="backgroundColor" />
+        <attr name="textColor"/>
+        <attr name="textSize"  />
         <attr name="arcWidth" format="dimension" />
-        <attr name="textSize" format="dimension" />
     </declare-styleable>
 </resources>
