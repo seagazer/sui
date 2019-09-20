@@ -29,6 +29,7 @@ public class ExRecyclerView extends RecyclerView {
     private Handler mKeyDropHandler = new Handler();
     private int[] mFirstInterceptDirections;
     private int[] mLastInterceptDirections;
+    private OnDataLoaderListener mLoadMoreListener;
 
     public ExRecyclerView(@NonNull Context context) {
         this(context, null);
@@ -41,6 +42,27 @@ public class ExRecyclerView extends RecyclerView {
     public ExRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setChildrenDrawingOrderEnabled(true);
+        addOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    // >0:scrollDown, <0:scrollUp
+                    if (!recyclerView.canScrollVertically(1) && mLoadMoreListener != null) {
+                        Logger.d("Load more ...");
+                        mLoadMoreListener.loadMore();
+                    }
+                }
+            }
+        });
+    }
+
+    public void setLoadMoreListener(OnDataLoaderListener listener) {
+        this.mLoadMoreListener = listener;
+    }
+
+    public interface OnDataLoaderListener {
+        void loadMore();
     }
 
     /**
