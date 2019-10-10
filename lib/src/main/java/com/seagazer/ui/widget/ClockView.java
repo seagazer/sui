@@ -55,7 +55,7 @@ public class ClockView extends AppCompatTextView {
         @Override
         public void run() {
             Calendar calendar = Calendar.getInstance();
-            final String strMonth = TimeStringUtil.numberToString(calendar.get(Calendar.MONTH));
+            final String strMonth = TimeStringUtil.numberToString(calendar.get(Calendar.MONTH) + 1);
             final String strDay = TimeStringUtil.numberToString(calendar.get(Calendar.DAY_OF_MONTH));
             final String strHour = TimeStringUtil.numberToString(calendar.get(Calendar.HOUR_OF_DAY));
             final String strMinute = TimeStringUtil.numberToString(calendar.get(Calendar.MINUTE));
