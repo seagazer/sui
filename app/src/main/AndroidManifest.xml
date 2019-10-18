@@ -11,10 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".FocusFrameActivity">
-        </activity>
-        <activity android:name=".BackgroundActivity"/>
-        <activity android:name=".GridActivity" >
+        <activity android:name=".CircleProgressActivity"></activity>
+        <activity android:name=".FocusFrameActivity"></activity>
+        <activity android:name=".BackgroundActivity"></activity>
+        <activity android:name=".GridActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
