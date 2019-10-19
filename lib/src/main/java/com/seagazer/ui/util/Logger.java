@@ -1,11 +1,14 @@
 package com.seagazer.ui.util;
 
+import android.os.Build;
 import android.util.Log;
+
+import com.seagazer.ui.BuildConfig;
 
 public class Logger {
 
     private static final String TAG = "Seagazer";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = BuildConfig.DEBUG;
 
     public static void d(String message) {
         if (DEBUG) {
