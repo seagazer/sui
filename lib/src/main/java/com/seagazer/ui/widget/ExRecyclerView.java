@@ -182,9 +182,6 @@ public class ExRecyclerView extends RecyclerView {
 
     @Override
     public View focusSearch(View focused, int direction) {
-        if (focused.getLayoutParams() instanceof RecyclerView.LayoutParams) {
-            return super.focusSearch(focused, direction);
-        }
         int position = getChildAdapterPosition(focused);
         if (position == 0 && mFirstInterceptDirections != null && mFirstInterceptDirections.length > 0) {
             for (int dir : mFirstInterceptDirections) {

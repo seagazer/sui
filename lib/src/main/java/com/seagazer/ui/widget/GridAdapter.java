@@ -72,6 +72,16 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
         grid.setIndex(mGrids.size() - 1);
     }
 
+    /**
+     * @param grid  行或列{@link Grid}
+     * @param index 行或列顺序索引
+     */
+    public void addGrid(Grid grid, int index) {
+        mGrids.add(index, grid);
+        checkAdapterAvailable();
+        grid.setIndex(index);
+    }
+
     private void checkAdapterAvailable() {
         int size = mGrids.size();
         if (size > 0) {
@@ -151,6 +161,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
             // setup adapter
             final BasePresenter adapter = grid.getPresenter();
             holder.recyclerView.setAdapter(adapter);
+            holder.recyclerView.setKeyDrop(100);
             holder.recyclerView.setHasFixedSize(true);
             // This may cause show the wrong layout when has recycle the view
 //             holder.recyclerView.setRecycledViewPool(mRecycledPool);
