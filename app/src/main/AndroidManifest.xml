@@ -10,15 +10,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".CircleProgressActivity"></activity>
-        <activity android:name=".FocusFrameActivity"></activity>
-        <activity android:name=".BackgroundActivity"></activity>
-        <activity android:name=".GridActivity">
+        <activity android:name=".ShakeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".CircleProgressActivity" />
+        <activity android:name=".FocusFrameActivity" />
+        <activity android:name=".BackgroundActivity" />
+        <activity android:name=".GridActivity">
+
         </activity>
     </application>
 
