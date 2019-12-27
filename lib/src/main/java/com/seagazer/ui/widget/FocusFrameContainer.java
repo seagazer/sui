@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,10 @@ import java.util.Set;
 
 /**
  * A container can auto draw focusDrawable when focus changed.
- * Call {@link #setDefaultFocusDrawable(FocusDrawable)} to setup a default focusDrawable
+ * <p>
+ * Call {@link #addDefaultFocusDrawable(FocusDrawable)} to setup a default focusDrawable.
  * Call {@link #addFocusDrawable(Class, FocusDrawable)} (FocusDrawable)} to add a focusDrawable,
- * when the newFocus instance this Class then will draw this drawable
+ * when the newFocus instance this Class then will draw this drawable.
  */
 public class FocusFrameContainer extends FrameLayout implements ViewTreeObserver.OnGlobalFocusChangeListener, ViewTreeObserver.OnDrawListener {
     private FocusDrawer mFocusDrawer;
@@ -42,11 +44,6 @@ public class FocusFrameContainer extends FrameLayout implements ViewTreeObserver
     protected void onFinishInflate() {
         super.onFinishInflate();
         addView(mFocusDrawer, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
     }
 
     @Override
@@ -88,9 +85,9 @@ public class FocusFrameContainer extends FrameLayout implements ViewTreeObserver
      *
      * @param drawable A drawable to draw focusHighLight
      */
-    public void setDefaultFocusDrawable(FocusDrawable drawable) {
+    public void addDefaultFocusDrawable(FocusDrawable drawable) {
         if (mFocusDrawer != null) {
-            mFocusDrawer.setDefaultFocusDrawable(drawable);
+            mFocusDrawer.addDefaultFocusDrawable(drawable);
         }
     }
 
@@ -115,7 +112,7 @@ public class FocusFrameContainer extends FrameLayout implements ViewTreeObserver
         private FocusDrawable mDefaultDrawable;
         private Map<Class<? extends View>, FocusDrawable> mFocusDrawables = new HashMap<>();
         private boolean isDirty = false;
-        private View mParent;
+        private ViewGroup mParent;
         private boolean isInitParentLocation = false;
         private int mOffsetHorizontal;
         private int mOffsetVertical;
@@ -126,7 +123,7 @@ public class FocusFrameContainer extends FrameLayout implements ViewTreeObserver
             mLastRect = new Rect();
         }
 
-        void setupParent(View parent) {
+        void setupParent(ViewGroup parent) {
             mParent = parent;
         }
 
@@ -138,8 +135,19 @@ public class FocusFrameContainer extends FrameLayout implements ViewTreeObserver
                     int[] parentLocation = new int[2];
                     mParent.getLocationOnScreen(parentLocation);
                     // the offset of parent on the screen
-                    mOffsetHorizontal = parentLocation[0] + mParent.getPaddingLeft();
-                    mOffsetVertical = parentLocation[1] + mParent.getPaddingTop();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        // if not clip padding, not calculate the parent's padding
+                        if (!mParent.getClipToPadding()) {
+                            mOffsetHorizontal = parentLocation[0];
+                            mOffsetVertical = parentLocation[1];
+                        } else {
+                            mOffsetHorizontal = parentLocation[0] + mParent.getPaddingLeft();
+                            mOffsetVertical = parentLocation[1] + mParent.getPaddingTop();
+                        }
+                    } else {
+                        mOffsetHorizontal = parentLocation[0] + mParent.getPaddingLeft();
+                        mOffsetVertical = parentLocation[1] + mParent.getPaddingTop();
+                    }
                 }
                 // calculate the focusView of parent
                 int[] location = new int[2];
@@ -187,7 +195,7 @@ public class FocusFrameContainer extends FrameLayout implements ViewTreeObserver
             return true;
         }
 
-        public void setDefaultFocusDrawable(FocusDrawable focusDrawable) {
+        public void addDefaultFocusDrawable(FocusDrawable focusDrawable) {
             this.mDefaultDrawable = focusDrawable;
         }
 

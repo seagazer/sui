@@ -23,7 +23,7 @@ public class RoundRectFocusDrawable extends FocusDrawable {
         mRectF = new RectF();
     }
 
-
+    @Override
     void drawFocusFrame(Canvas canvas, Rect drawRect) {
         mRectF.set(drawRect.left, drawRect.top, drawRect.right, drawRect.bottom);
         canvas.drawRoundRect(mRectF, mRadius, mRadius, mPaint);

@@ -18,7 +18,7 @@ public class CircleFocusDrawable extends FocusDrawable {
         mPaint.setColor(color);
     }
 
-
+    @Override
     void drawFocusFrame(Canvas canvas, Rect drawRect) {
         float cx = (drawRect.right - drawRect.left) / 2.0f + drawRect.left;
         float cy = (drawRect.bottom - drawRect.top) / 2.0f + drawRect.top;
