@@ -63,7 +63,7 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     public void onResume() {
         ViewTreeObserver vto = mDecorView.getViewTreeObserver();
         if (vto.isAlive()) {

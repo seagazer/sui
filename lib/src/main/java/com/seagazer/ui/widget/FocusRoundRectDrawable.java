@@ -15,16 +15,16 @@ public class FocusRoundRectDrawable implements FocusLampDrawable {
     private RectF mRectF;
 
     /**
-     * @param strokeWidth The radius of rect
-     * @param width       The width of the paint to draw
+     * @param radius      The radius of rect
+     * @param strokeWidth The width of the paint to draw
      * @param color       The color of the paint to draw
      */
-    public FocusRoundRectDrawable(float strokeWidth, float width, int color) {
+    public FocusRoundRectDrawable(float radius, float strokeWidth, int color) {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(width);
+        mPaint.setStrokeWidth(strokeWidth);
         mPaint.setColor(color);
-        mRadius = strokeWidth + 5;// set padding 5px
+        mRadius = radius + 5;// set padding 5px
         mRectF = new RectF();
     }
 
