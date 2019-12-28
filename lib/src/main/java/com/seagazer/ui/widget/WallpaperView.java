@@ -32,7 +32,7 @@ import java.util.List;
  * 可以通过调用{@link #setBgImage}来改变背景，
  * 通过调用{@link #startRipple}启动随机波纹效果
  */
-public class BackgroundView extends FrameLayout {
+public class WallpaperView extends FrameLayout {
     private static final int MSG_REFRESH_IMAGE = 0x0001;
     private static final int MSG_REFRESH_RIPPLE = 0x0002;
     private static final int MAX_RIPPLE_COUNT = 10;
@@ -48,22 +48,22 @@ public class BackgroundView extends FrameLayout {
     private HandlerThread mThread;
     private Handler mHandler;
 
-    public BackgroundView(Context context) {
+    public WallpaperView(Context context) {
         this(context, null);
     }
 
-    public BackgroundView(Context context, @Nullable AttributeSet attrs) {
+    public WallpaperView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public BackgroundView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public WallpaperView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.BackgroundView);
-        Drawable drawable = ta.getDrawable(R.styleable.BackgroundView_defaultDrawable);
-        mTransitionDuration = ta.getInt(R.styleable.BackgroundView_animDuration, Constants.ANIM_LONG_DURATION);
-        mTransitionDelay = ta.getInt(R.styleable.BackgroundView_animDelay, Constants.ANIM_DEFAULT_DELAY);
-        mFilterColor = ta.getColor(R.styleable.BackgroundView_filterColor, getResources().getColor(R.color.colorDimDark));
-        isColorFilter = ta.getBoolean(R.styleable.BackgroundView_isColorFilter, false);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.WallpaperView);
+        Drawable drawable = ta.getDrawable(R.styleable.WallpaperView_defaultDrawable);
+        mTransitionDuration = ta.getInt(R.styleable.WallpaperView_animDuration, Constants.ANIM_LONG_DURATION);
+        mTransitionDelay = ta.getInt(R.styleable.WallpaperView_animDelay, Constants.ANIM_DEFAULT_DELAY);
+        mFilterColor = ta.getColor(R.styleable.WallpaperView_filterColor, getResources().getColor(R.color.colorDimDark));
+        isColorFilter = ta.getBoolean(R.styleable.WallpaperView_isColorFilter, false);
         ta.recycle();
         if (drawable != null) {
             mDrawables[0] = drawable;
@@ -135,7 +135,7 @@ public class BackgroundView extends FrameLayout {
                         }
                         mDrawables[1] = newDrawable;
                         final TransitionDrawable transitionDrawable = new TransitionDrawable(mDrawables);
-                        BackgroundView.this.post(new Runnable() {
+                        WallpaperView.this.post(new Runnable() {
                             @Override
                             public void run() {
                                 setBackground(transitionDrawable);
