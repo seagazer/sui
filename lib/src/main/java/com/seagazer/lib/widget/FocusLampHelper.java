@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A helper framework to bind the displaying activity, so that it can auto draw focusDrawable when focus changed.
+ * A helper class to bind the displaying activity, so that it can auto draw focusDrawable when focus changed.
  * If you use frameLayout as the rootView, you can also use {@link FocusLampContainer} instead.
  * <p>
  * Call {@link #setupActivity(ComponentActivity, ViewGroup)} to bind a support activity, so it can auto handle the focus frame changed.
@@ -64,7 +64,7 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    public void onResume() {
+    private void onResume() {
         ViewTreeObserver vto = mDecorView.getViewTreeObserver();
         if (vto.isAlive()) {
             // Activity onResume, vto register
@@ -77,7 +77,7 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    public void onPause() {
+    private void onPause() {
         ViewTreeObserver vto = mDecorView.getViewTreeObserver();
         if (vto.isAlive()) {
             // Activity onPause, vto unregister
@@ -87,7 +87,7 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    public void onDestroy() {
+    private void onDestroy() {
         isHostAlive = false;
         // Activity onDestroy, release all
         mHost.getLifecycle().removeObserver(this);

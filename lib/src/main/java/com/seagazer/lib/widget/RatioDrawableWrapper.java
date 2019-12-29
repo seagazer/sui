@@ -4,61 +4,94 @@ import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
- * A drawable wrapper to keep ratio for the drawer's width : height.
- * It always set the top as base line.
+ * A drawable wrapper to auto fill the vision with the max of width and height.
+ * Set the {@link AlignMode} to clip the drawable, so it can fill this vision and keep the drawable ratio of width : height.
  */
 public class RatioDrawableWrapper extends Drawable {
     private Drawable mDrawable;
     private int mWidth, mHeight;
     private AlignMode mAlignMode;
+    private boolean isLandscape;
+    private int mMaskColor = -1;
 
     /**
-     * Clip mode
+     * Align mode
      */
     public enum AlignMode {
         /**
-         * clip from top
+         * If the screenOrientation is landscape, it will clip the drawable from top to bottom,
+         * or clip from left to right if the orientation is portrait
          */
-        TOP,
+        START,
         /**
-         * clip from bottom
+         * If the screenOrientation is landscape, it will clip the drawable from bottom to top,
+         * or clip from right to left if the orientation is portrait
          */
-        BOTTOM
+        END,
+        /**
+         * Whatever the screenOrientation is landscape or portrait, it will clip from center of drawable
+         */
+        CENTER
     }
 
     /**
      * @param drawable the content drawable
-     * @param mode     the base line start to clip, default is align top if not set this mode
+     * @param mode     the mode to clip drawable, default is align start if not set this mode
      */
     RatioDrawableWrapper(Drawable drawable, @Nullable AlignMode mode) {
         this.mDrawable = drawable;
-        this.mAlignMode = mode == null ? AlignMode.TOP : mode;
+        this.mAlignMode = mode == null ? AlignMode.START : mode;
     }
 
     @Override
     public void draw(@NonNull Canvas canvas) {
-        // The canvas size is the same as this wrapperDrawable's bounds
-        float scale = mWidth * 1.0f / mDrawable.getIntrinsicWidth();
+        // the size of canvas is the same as this wrapperDrawable's bounds
+        float scaleW = mWidth * 1.0f / mDrawable.getIntrinsicWidth();
+        float scaleH = mHeight * 1.0f / mDrawable.getIntrinsicHeight();
+        float scale = isLandscape ? scaleW : scaleH;
         canvas.save();
         canvas.scale(scale, scale);
-        if (mAlignMode == AlignMode.BOTTOM) {
-            canvas.translate(0, (mHeight - mDrawable.getIntrinsicHeight() * scale) / scale);
+        if (mAlignMode == AlignMode.END) {
+            if (isLandscape) {
+                canvas.translate(0, (mHeight - mDrawable.getIntrinsicHeight() * scale) / scale);
+            } else {
+                canvas.translate((mWidth - mDrawable.getIntrinsicWidth() * scale) / scale, 0);
+            }
+        } else if (mAlignMode == AlignMode.CENTER) {
+            if (isLandscape) {
+                canvas.translate(0, (mHeight - mDrawable.getIntrinsicHeight() * scale) / scale / 2);
+            } else {
+                canvas.translate((mWidth - mDrawable.getIntrinsicWidth() * scale) / scale / 2, 0);
+            }
         }
         mDrawable.draw(canvas);
+        if (mMaskColor != -1) {
+            canvas.drawColor(mMaskColor);
+        }
         canvas.restore();
+    }
+
+    /**
+     * Set a color mask overlay this drawable
+     * @param color
+     */
+    public void setColorMask(@ColorInt int color) {
+        this.mMaskColor = color;
     }
 
     @Override
     public void setBounds(int left, int top, int right, int bottom) {
-        super.setBounds(left, top, right, bottom);// This wrapper's bounds
-        mWidth = right - left;// The drawer host's width
-        mHeight = bottom - top;// The drawer host's height
-        int drawableWidth = mDrawable.getIntrinsicWidth();// The bitmap's width: px * density
-        int drawableHeight = mDrawable.getIntrinsicHeight();// The bitmap's height: px * density
+        super.setBounds(left, top, right, bottom);// this wrapper's bounds
+        mWidth = right - left;// the width of drawer host
+        mHeight = bottom - top;// the height of drawer host
+        isLandscape = mWidth >= mHeight;
+        int drawableWidth = mDrawable.getIntrinsicWidth();// the width of bitmap
+        int drawableHeight = mDrawable.getIntrinsicHeight();// the height of bitmap
         mDrawable.setBounds(0, 0, drawableWidth, drawableHeight);
     }
 
