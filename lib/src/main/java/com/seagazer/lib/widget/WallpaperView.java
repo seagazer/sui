@@ -6,8 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -19,6 +17,8 @@ import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.seagazer.lib.R;
@@ -28,25 +28,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 提供切换背景功能的背景墙
- * 可以通过调用{@link #setBgImage}来改变背景，
- * 通过调用{@link #startRipple}启动随机波纹效果
+ * A container can change the background drawable of a wallpaper.
+ * <p>
+ * Call {@link #setTransitionDuration(int)} to set the length of drawable transition.
+ * Call {@link #setTransitionDelay(int)}  to set the delay time of drawable transition.
+ * Call {@link #setWallpaper(int)} or {@link #setWallpaper(Bitmap)} or {@link #setWallpaper(Drawable)} to change a wallpaper.
+ * Call {@link #setAlignMode(RatioDrawableWrapper.AlignMode)} to set the display mode if the drawable can not fill the vision.
  */
 public class WallpaperView extends FrameLayout {
     private static final int MSG_REFRESH_IMAGE = 0x0001;
     private static final int MSG_REFRESH_RIPPLE = 0x0002;
+    private static final int ALIGN_MODE_START = 0;
+    private static final int ALIGN_MODE_CENTER = 1;
+    private static final int ALIGN_MODE_END = 2;
     private static final int MAX_RIPPLE_COUNT = 10;
     private static final int RIPPLE_REFRESH_TIME = 30;
     private int mTransitionDuration;
     private int mTransitionDelay;
     private Drawable[] mDrawables = new Drawable[2];
-    private boolean isColorFilter;
+    private boolean hasColorMask;
     private int mFilterColor;
-    private float mSizeRatio;
     private List<Ripple> mRipples = new ArrayList<>();
     private boolean isRipple;
     private HandlerThread mThread;
     private Handler mHandler;
+    private RatioDrawableWrapper.AlignMode mAlignMode;
 
     public WallpaperView(Context context) {
         this(context, null);
@@ -63,7 +69,8 @@ public class WallpaperView extends FrameLayout {
         mTransitionDuration = ta.getInt(R.styleable.WallpaperView_animDuration, Constants.ANIM_LONG_DURATION);
         mTransitionDelay = ta.getInt(R.styleable.WallpaperView_animDelay, Constants.ANIM_DEFAULT_DELAY);
         mFilterColor = ta.getColor(R.styleable.WallpaperView_filterColor, getResources().getColor(R.color.colorDimDark));
-        isColorFilter = ta.getBoolean(R.styleable.WallpaperView_isColorFilter, false);
+        hasColorMask = ta.getBoolean(R.styleable.WallpaperView_isColorMask, false);
+        int alignMode = ta.getInt(R.styleable.WallpaperView_alignMode, 0);
         ta.recycle();
         if (drawable != null) {
             mDrawables[0] = drawable;
@@ -71,45 +78,88 @@ public class WallpaperView extends FrameLayout {
             mDrawables[0] = new ColorDrawable(getResources().getColor(R.color.brown_900));
         }
         setBackground(mDrawables[0]);
+        if (alignMode == ALIGN_MODE_START) {
+            mAlignMode = RatioDrawableWrapper.AlignMode.START;
+        } else if (alignMode == ALIGN_MODE_CENTER) {
+            mAlignMode = RatioDrawableWrapper.AlignMode.CENTER;
+        } else if (alignMode == ALIGN_MODE_END) {
+            mAlignMode = RatioDrawableWrapper.AlignMode.END;
+        }
         setWillNotDraw(false);
 
         mThread = new HandlerThread(this.getClass().getSimpleName());
     }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        mSizeRatio = w * 1.0f / h;
+    /**
+     * Set a new wallPaper to change
+     *
+     * @param resource wallPaper
+     */
+    public void setWallpaper(@DrawableRes int resource) {
+        Drawable drawable = getResources().getDrawable(resource);
+        setWallpaper(drawable);
     }
 
     /**
-     * 更换背景
+     * Set a new wallPaper to change
      *
-     * @param drawable 背景图
+     * @param bitmap wallPaper
      */
-    public void setBgImage(Drawable drawable) {
+    public void setWallpaper(@NonNull Bitmap bitmap) {
+        BitmapDrawable drawable = new BitmapDrawable(getResources(), bitmap);
+        setWallpaper(drawable);
+    }
+
+    /**
+     * Set a new wallPaper to change
+     *
+     * @param drawable wallPaper
+     */
+    public void setWallpaper(@NonNull Drawable drawable) {
         mHandler.removeMessages(MSG_REFRESH_IMAGE);
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_REFRESH_IMAGE, drawable), mTransitionDelay);
+        RatioDrawableWrapper drawableWrapper = new RatioDrawableWrapper(drawable, mAlignMode);
+        if (hasColorMask) {
+            drawableWrapper.setColorMask(mFilterColor);
+        }
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_REFRESH_IMAGE, drawableWrapper), mTransitionDelay);
     }
 
     /**
-     * 更换背景
+     * Set a color mask layer overlay the wallpaper
      *
-     * @param drawable 背景图
+     * @param color the color of the mask layer
      */
-    public void setBgImage(Bitmap drawable) {
-        mHandler.removeMessages(MSG_REFRESH_IMAGE);
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_REFRESH_IMAGE, new BitmapDrawable(getResources(), drawable)), mTransitionDelay);
-    }
-
-    /**
-     * 添加背景遮罩
-     *
-     * @param color 遮罩颜色
-     */
-    public void addColorFilter(int color) {
-        isColorFilter = true;
+    public void setColorMask(int color) {
+        hasColorMask = true;
         mFilterColor = color;
+    }
+
+    /**
+     * Set the transition delay so that it will drop the transition when change wallPaper so fast
+     *
+     * @param delay duration
+     */
+    public void setTransitionDelay(int delay) {
+        mTransitionDelay = delay;
+    }
+
+    /**
+     * Set the transition animation duration
+     *
+     * @param duration duration
+     */
+    public void setTransitionDuration(int duration) {
+        mTransitionDuration = duration;
+    }
+
+    /**
+     * Set the base line of the drawable to clip.
+     * The wallPaper drawable always fill width to adjust the background.
+     *
+     * @param alignMode the base line start to clip, default is align top
+     */
+    public void setAlignMode(RatioDrawableWrapper.AlignMode alignMode) {
+        mAlignMode = alignMode;
     }
 
     @Override
@@ -128,11 +178,6 @@ public class WallpaperView extends FrameLayout {
                             mDrawables[0] = mDrawables[1];
                         }
                         Drawable newDrawable = (Drawable) msg.obj;
-                        Rect original = newDrawable.getBounds();
-                        newDrawable.setBounds(original.left, original.top, original.right, (int) ((original.right - original.left) / mSizeRatio + original.top));
-                        if (isColorFilter) {
-                            newDrawable.setColorFilter(mFilterColor, PorterDuff.Mode.SRC_ATOP);
-                        }
                         mDrawables[1] = newDrawable;
                         final TransitionDrawable transitionDrawable = new TransitionDrawable(mDrawables);
                         WallpaperView.this.post(new Runnable() {
@@ -162,7 +207,7 @@ public class WallpaperView extends FrameLayout {
     }
 
     /**
-     * 开启随机波纹效果
+     * Start a random ripple anim
      */
     public void startRipple() {
         isRipple = true;
@@ -171,7 +216,7 @@ public class WallpaperView extends FrameLayout {
     }
 
     /**
-     * 停止随机波纹效果
+     * Stop the random ripple anim
      */
     public void endRipple() {
         isRipple = false;
@@ -181,9 +226,9 @@ public class WallpaperView extends FrameLayout {
     }
 
     /**
-     * 设置波纹颜色
+     * Set the color of ripper
      *
-     * @param color 波纹颜色
+     * @param color the color of ripper
      */
     public void setRippleColor(int color) {
         for (Ripple ripple : mRipples) {
@@ -192,9 +237,9 @@ public class WallpaperView extends FrameLayout {
     }
 
     /**
-     * 设置波纹线条宽度
+     * Set the width of ripper
      *
-     * @param width 线条宽度
+     * @param width the width of ripper
      */
     public void setRippleWidth(int width) {
         for (Ripple ripple : mRipples) {
@@ -203,9 +248,9 @@ public class WallpaperView extends FrameLayout {
     }
 
     /**
-     * 设置波纹最大半径
+     * Set the radius of ripper
      *
-     * @param radius 波纹半径
+     * @param radius the radius of ripper
      */
     public void setRippleRadius(int radius) {
         for (Ripple ripple : mRipples) {
@@ -214,9 +259,9 @@ public class WallpaperView extends FrameLayout {
     }
 
     /**
-     * 设置波纹涟漪动效时长
+     * Set the anim duration of ripper
      *
-     * @param duration 动效时长
+     * @param duration the length of duration
      */
     public void setRippleDuration(int duration) {
         for (Ripple ripple : mRipples) {

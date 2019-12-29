@@ -12,7 +12,12 @@
         <attr name="animDuration" />
         <attr name="animDelay" format="integer" />
         <attr name="filterColor" />
-        <attr name="isColorFilter" format="boolean" />
+        <attr name="isColorMask" format="boolean" />
+        <attr name="alignMode">
+            <enum name="start" value="0" />
+            <enum name="center" value="1" />
+            <enum name="end" value="2" />
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="LoadingView">
@@ -52,8 +57,8 @@
     <declare-styleable name="CircleProgress">
         <attr name="foregroundColor" />
         <attr name="backgroundColor" />
-        <attr name="textColor"/>
-        <attr name="textSize"  />
+        <attr name="textColor" />
+        <attr name="textSize" />
         <attr name="arcWidth" format="dimension" />
     </declare-styleable>
 </resources>

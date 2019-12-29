@@ -22,7 +22,7 @@ public class FocusLampHelperActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_focus_lamp);
+        setContentView(R.layout.activity_focuslamp);
         FocusLampHelper helper = new FocusLampHelper();
         helper.setupActivity(this, null);
         helper.addFocusDrawable(AppCompatButton.class, new FocusRoundRectDrawable(0, 4, Color.RED));

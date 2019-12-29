@@ -27,14 +27,14 @@ public class WallpaperActivity extends AppCompatActivity {
         wallpaperHelper1.setAlignMode(RatioDrawableWrapper.AlignMode.CENTER);
         wallpaperHelper1.setupActivity(this, null);
         wallpaperHelper1.setColorMask(0x800A0A0A);
-        wallpaperHelper1.setTransitionDuration(3000);
+//        wallpaperHelper1.setTransitionDuration(3000);
 
         FrameLayout preview = findViewById(R.id.preview);
         wallpaperHelper2 = new WallpaperHelper();
         wallpaperHelper2.setAlignMode(RatioDrawableWrapper.AlignMode.CENTER);
         wallpaperHelper2.setupView(preview, null);
         wallpaperHelper2.setColorMask(0x80ff0000);
-        wallpaperHelper2.setTransitionDuration(1000);
+//        wallpaperHelper2.setTransitionDuration(1000);
 
     }
 
