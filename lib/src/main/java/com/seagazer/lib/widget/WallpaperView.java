@@ -32,8 +32,10 @@ import java.util.List;
  * <p>
  * Call {@link #setTransitionDuration(int)} to set the length of drawable transition.
  * Call {@link #setTransitionDelay(int)}  to set the delay time of drawable transition.
- * Call {@link #setWallpaper(int)} or {@link #setWallpaper(Bitmap)} or {@link #setWallpaper(Drawable)} to change a wallpaper.
- * Call {@link #setAlignMode(RatioDrawableWrapper.AlignMode)} to set the display mode if the drawable can not fill the vision.
+ * Call {@link #setWallpaper(int)} or {@link #setWallpaper(Bitmap)} or {@link #setWallpaper(Drawable)}
+ * to change a wallpaper.
+ * Call {@link #setAlignMode(RatioDrawableWrapper.AlignMode)} to set the display mode if the drawable
+ * can not fill the vision.
  */
 public class WallpaperView extends FrameLayout {
     private static final int MSG_REFRESH_IMAGE = 0x0001;

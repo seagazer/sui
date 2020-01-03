@@ -26,11 +26,13 @@ import java.util.Set;
  * A helper class to bind the displaying activity, so that it can auto draw focusDrawable when focus changed.
  * If you use frameLayout as the rootView, you can also use {@link FocusLampContainer} instead.
  * <p>
- * Call {@link #setTarget(ComponentActivity, View)} or {@link #setTarget(ComponentActivity, Rect)} to bind a support activity when the activity onCreate, so it can auto handle the focus frame changed.
+ * Call {@link #setTarget(ComponentActivity, View)} or {@link #setTarget(ComponentActivity, Rect)} to bind
+ * a support activity when the activity onCreate, so it can auto handle the focus frame changed.
  * <p>
  * Call {@link #addDefaultFocusDrawable(FocusLampDrawable)} to setup a default focusDrawable.
  * <p>
- * Call {@link #addFocusDrawable(Class, FocusLampDrawable)} to add a focusDrawable and bind a class, when the newFocus as same as this Class,
+ * Call {@link #addFocusDrawable(Class, FocusLampDrawable)} to add a focusDrawable and bind a class, when
+ * the newFocus as same as this Class,
  * it will draw this focusDrawable, not the default focusDrawable.
  */
 @SuppressLint("RestrictedApi")
@@ -49,10 +51,11 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
      * Bind a support activity to handle the focus frame changed.
      * You should call this when activity onCreate.
      *
-     * @param activity The displaying activity, only support {@link ComponentActivity} because it implements LifecycleOwner.
+     * @param activity The displaying activity, only support {@link ComponentActivity} because it
+     *                 implements LifecycleOwner.
      * @param drawArea Limit the drawing area, if null the default visibleArea is fullscreen.
-     *                 For example, you set a view here, if the newFocus is out of the drawRect of this view,
-     *                 the framework will not draw the focusDrawable.
+     *                 For example, you set a view here, if the newFocus is out of the drawRect of
+     *                 this view, we will not draw the focusDrawable.
      */
     public void setTarget(@NonNull ComponentActivity activity, @Nullable View drawArea) {
         if (mHost != null) {
@@ -72,7 +75,8 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
      * Bind a support activity to handle the focus frame changed.
      * You should call this when activity onCreate.
      *
-     * @param activity The displaying activity, only support {@link ComponentActivity} because it implements LifecycleOwner.
+     * @param activity The displaying activity, only support {@link ComponentActivity} because it
+     *                 implements LifecycleOwner.
      * @param drawArea Limit the drawing area, if null the default visibleArea is fullscreen.
      *                 For example, you set a rect here, if the newFocus is out of this rect,
      *                 the framework will not draw the focusDrawable.
@@ -130,7 +134,8 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
     public void onGlobalLayout() {
         isFirstLayout = false;
         checkDrawArea();
-        mDecorView.addView(mFocusDrawer, -1, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        mDecorView.addView(mFocusDrawer, -1,
+                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         ViewTreeObserver vto = mDecorView.getViewTreeObserver();
         if (vto.isAlive()) {
             vto.removeOnGlobalLayoutListener(this);

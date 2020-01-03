@@ -20,10 +20,12 @@ import java.util.Set;
  * <p>
  * Call {@link #addDefaultFocusDrawable(FocusLampDrawable)} to setup a default focusDrawable.
  * <p>
- * Call {@link #addFocusDrawable(Class, FocusLampDrawable)} to add a focusDrawable and bind a class, when the newFocus as same as this Class,
+ * Call {@link #addFocusDrawable(Class, FocusLampDrawable)} to add a focusDrawable and bind a class,
+ * when the newFocus as same as this Class,
  * it will draw this focusDrawable, not the default focusDrawable.
  */
-public class FocusLampContainer extends FrameLayout implements ViewTreeObserver.OnGlobalFocusChangeListener, ViewTreeObserver.OnDrawListener {
+public class FocusLampContainer extends FrameLayout implements ViewTreeObserver.OnGlobalFocusChangeListener,
+        ViewTreeObserver.OnDrawListener {
     private FocusDrawer mFocusDrawer;
     private View mFocused;
     private Rect mClipCanvas;

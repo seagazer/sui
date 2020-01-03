@@ -26,13 +26,15 @@ import java.lang.ref.WeakReference;
 /**
  * A helper class to change the background drawable of a wallpaper.
  * <p>
- * Call {@link #setTarget(ComponentActivity, Drawable)} to bind a target activity and a default display drawable
- * Call {@link #setTarget(ViewGroup, Drawable)}  to bind a target viewGroup and a default display drawable
+ * Call {@link #setTarget(ComponentActivity, Drawable)} to bind a target activity and a default display drawable.
+ * Call {@link #setTarget(ViewGroup, Drawable)}  to bind a target viewGroup and a default display drawable.
  * Call {@link #setTransitionDuration(int)} to set the length of drawable transition.
  * Call {@link #setTransitionDelay(int)} to set the delay time of drawable transition.
  * Call {@link #setColorMask(int)} to set a color mask layer overlay the wallpaper.
- * Call {@link #setWallpaper(int)} or {@link #setWallpaper(Bitmap)} or {@link #setWallpaper(Drawable)} to change a wallpaper.
- * Call {@link #setAlignMode(RatioDrawableWrapper.AlignMode)} to set the display mode if the drawable can not fill the vision.
+ * Call {@link #setWallpaper(int)} or {@link #setWallpaper(Bitmap)} or {@link #setWallpaper(Drawable)}
+ * to change a wallpaper.
+ * Call {@link #setAlignMode(RatioDrawableWrapper.AlignMode)} to set the display mode if the drawable
+ * can not fill the vision.
  */
 public class WallpaperHelper implements LifecycleObserver {
     private static final int MSG_REFRESH_IMAGE = 0x0001;
@@ -219,7 +221,8 @@ public class WallpaperHelper implements LifecycleObserver {
     public void setTransitionDelay(int delay) {
         checkInit();
         if (mTransitionDelay < mTransitionDuration) {
-            Log.w("WallpaperHelper", "[WARNING]: You should set the transitionDelay more than transitionDuration better !");
+            Log.w("WallpaperHelper",
+                    "[WARNING]: You should set the transitionDelay more than transitionDuration better !");
         }
         if (isHostAlive() || isViewAlive()) {
             mTransitionDelay = delay;
@@ -234,7 +237,8 @@ public class WallpaperHelper implements LifecycleObserver {
     public void setTransitionDuration(int duration) {
         checkInit();
         if (mTransitionDelay < mTransitionDuration) {
-            Log.w("WallpaperHelper", "[WARNING]: You should set the transitionDelay more than transitionDuration better !");
+            Log.w("WallpaperHelper",
+                    "[WARNING]: You should set the transitionDelay more than transitionDuration better !");
         }
         if (isHostAlive() || isViewAlive()) {
             mTransitionDuration = duration;
@@ -264,7 +268,8 @@ public class WallpaperHelper implements LifecycleObserver {
 
     private void checkInit() {
         if (isHostAlive() && isViewAlive()) {
-            throw new RuntimeException("A WallpaperHelp instance can only have one host, you must call one of setTarget or setTarget !");
+            throw new RuntimeException("A WallpaperHelp instance can only have one host," +
+                    " you must call one of setTarget or setTarget !");
         }
     }
 
