@@ -18,6 +18,6 @@ public interface FocusLampDrawable {
      *                  or DecorView if you use {@link FocusLampHelper}
      * @param focusRect The rect of current focus view, you should draw the drawable in this rect
      */
-    void drawFocusFrame(Canvas canvas, Rect focusRect);
+    void drawFocusLamp(Canvas canvas, Rect focusRect);
 
 }

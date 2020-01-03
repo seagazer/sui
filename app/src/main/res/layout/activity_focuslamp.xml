@@ -7,38 +7,44 @@
     android:padding="16dp"
     tools:context=".FocusLampHelperActivity">
 
+    <View
+        android:id="@+id/clip"
+        android:layout_width="500dp"
+        android:layout_height="220dp"
+        android:background="#cccc" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#11383F"
+        android:background="@drawable/sl_background"
         android:focusableInTouchMode="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:background="#11383F"
+        android:background="@drawable/sl_background"
         android:focusableInTouchMode="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="#11383F"
+        android:background="@drawable/sl_background"
         android:focusableInTouchMode="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:background="#11383F"
+        android:background="@drawable/sl_background"
         android:focusableInTouchMode="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="#11383F"
+        android:background="@drawable/sl_background"
         android:focusableInTouchMode="true" />
 
 

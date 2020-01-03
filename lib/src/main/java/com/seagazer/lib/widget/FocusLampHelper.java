@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
@@ -17,6 +16,8 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 
+import com.seagazer.lib.util.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +26,7 @@ import java.util.Set;
  * A helper class to bind the displaying activity, so that it can auto draw focusDrawable when focus changed.
  * If you use frameLayout as the rootView, you can also use {@link FocusLampContainer} instead.
  * <p>
- * Call {@link #setupActivity(ComponentActivity, ViewGroup)} to bind a support activity, so it can auto handle the focus frame changed.
+ * Call {@link #setTarget(ComponentActivity, View)} or {@link #setTarget(ComponentActivity, Rect)} to bind a support activity when the activity onCreate, so it can auto handle the focus frame changed.
  * <p>
  * Call {@link #addDefaultFocusDrawable(FocusLampDrawable)} to setup a default focusDrawable.
  * <p>
@@ -40,19 +41,23 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
     private FocusDrawer mFocusDrawer;
     private View mFocused;
     private Rect mCanvasRect;
-    private ViewGroup mDrawArea;
+    private View mDrawArea;
     private boolean isFirstLayout = true;
     private boolean isHostAlive;
 
     /**
      * Bind a support activity to handle the focus frame changed.
+     * You should call this when activity onCreate.
      *
      * @param activity The displaying activity, only support {@link ComponentActivity} because it implements LifecycleOwner.
      * @param drawArea Limit the drawing area, if null the default visibleArea is fullscreen.
-     *                 For example, you set a viewGroup here, if the newFocus is out of the drawRect of this viewGroup,
+     *                 For example, you set a view here, if the newFocus is out of the drawRect of this view,
      *                 the framework will not draw the focusDrawable.
      */
-    public void setupActivity(@NonNull ComponentActivity activity, @Nullable ViewGroup drawArea) {
+    public void setTarget(@NonNull ComponentActivity activity, @Nullable View drawArea) {
+        if (mHost != null) {
+            throw new RuntimeException("You have set a target activity, this helper only support one target!");
+        }
         mHost = activity;
         isHostAlive = true;
         mHost.getLifecycle().addObserver(this);
@@ -60,6 +65,29 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
         mDecorView = (FrameLayout) mHost.getWindow().getDecorView();
         if (drawArea != null) {
             mDrawArea = drawArea;
+        }
+    }
+
+    /**
+     * Bind a support activity to handle the focus frame changed.
+     * You should call this when activity onCreate.
+     *
+     * @param activity The displaying activity, only support {@link ComponentActivity} because it implements LifecycleOwner.
+     * @param drawArea Limit the drawing area, if null the default visibleArea is fullscreen.
+     *                 For example, you set a rect here, if the newFocus is out of this rect,
+     *                 the framework will not draw the focusDrawable.
+     */
+    public void setTarget(@NonNull ComponentActivity activity, @Nullable Rect drawArea) {
+        if (mHost != null) {
+            throw new RuntimeException("You have set a target activity, this helper only support one target!");
+        }
+        mHost = activity;
+        isHostAlive = true;
+        mHost.getLifecycle().addObserver(this);
+        mFocusDrawer = new FocusDrawer(mHost);
+        mDecorView = (FrameLayout) mHost.getWindow().getDecorView();
+        if (drawArea != null) {
+            mCanvasRect = drawArea;
         }
     }
 
@@ -202,18 +230,28 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
                     mCurrentRect.set(left, top, right, bottom);
                     if (mLastRect.left == mCurrentRect.left && mLastRect.top == mCurrentRect.top &&
                             mLastRect.right == mCurrentRect.right && mLastRect.bottom == mCurrentRect.bottom) {
-                        // End draw, break the draw circulation
+                        // End draw, break the lopper of onDraw and invalidate
+                        Logger.d("==> not focus changed, stop draw");
                         return;
                     }
-                    // Current focus is out of canvas area and isDirty, clear focus drawable
-                    if (!isFocusInCanvas() && isDirty) {
+                    if (isFullOutOfCanvas() && !isDirty) {
+                        // Not do any draw when current focus is out of canvas
+                        Logger.d("==> out of canvas, no draw");
+                        mLastRect.set(mCurrentRect);
+                        return;
+                    }
+                    // Current focus is out of canvas area and isDirty
+                    if (!isCrossInCanvas() && isDirty) {
+                        // clear focus drawable first
                         mCurDrawable = null;
+                        Logger.d("==> clear: out of draw");
+                        // clear canvas
                         invalidate();
                         return;
                     }
                     // Current focus is in canvas area, draw focus drawable
+                    Logger.d("==> start draw");
                     invalidate();
-                    isDirty = true;
                     mLastRect.set(mCurrentRect);
                 }
             }
@@ -240,14 +278,24 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
             return true;
         }
 
-        // Check the focusView is in the area of this canvas
-        private boolean isFocusInCanvas() {
+        // Check the focusView is cross in the area of this canvas
+        private boolean isCrossInCanvas() {
             // If not set the drawArea, default drawArea is fullScreen
-            if (mDrawArea == null) {
+            if (mCanvasRect == null) {
                 return true;
             }
-            return mCurrentRect.left >= mCanvasRect.left && mCurrentRect.right <= mCanvasRect.right &&
-                    mCurrentRect.top >= mCanvasRect.top && mCurrentRect.bottom <= mCanvasRect.bottom;
+            return mCurrentRect.left >= mCanvasRect.left && mCurrentRect.right <= mCanvasRect.right
+                    && mCurrentRect.top >= mCanvasRect.top && mCurrentRect.bottom <= mCanvasRect.bottom;
+        }
+
+        // Do nothing when check the focusView is all out of the canvas
+        private boolean isFullOutOfCanvas() {
+            // If not set the drawArea, always is in the canvas
+            if (mCanvasRect == null) {
+                return false;
+            }
+            return mCurrentRect.right < mCanvasRect.left || mCurrentRect.left > mCanvasRect.right
+                    || mCurrentRect.bottom < mCanvasRect.top || mCurrentRect.top > mCanvasRect.bottom;
         }
 
         void addDefaultFocusDrawable(FocusLampDrawable focusDrawable) {
@@ -263,10 +311,12 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
             if (isHostAlive) {
                 if (mCanvasRect != null) {
                     canvas.save();
+                    Logger.d("==> clip draw");
                     canvas.clipRect(mCanvasRect);
                     drawFocus(canvas);
                     canvas.restore();
                 } else {
+                    Logger.d("==> draw");
                     drawFocus(canvas);
                 }
             }
@@ -275,10 +325,13 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
         // Draw focus drawable or clear canvas
         private void drawFocus(Canvas canvas) {
             if (isDirty && mCurDrawable == null) {
+                Logger.d("==> clear canvas");
                 canvas.drawColor(Color.TRANSPARENT);
                 isDirty = false;
             } else if (mCurDrawable != null) {
-                mCurDrawable.drawFocusFrame(canvas, mCurrentRect);
+                Logger.d("==> draw focusDrawable");
+                mCurDrawable.drawFocusLamp(canvas, mCurrentRect);
+                isDirty = true;
             }
         }
     }

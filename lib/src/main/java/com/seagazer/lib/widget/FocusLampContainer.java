@@ -26,6 +26,7 @@ import java.util.Set;
 public class FocusLampContainer extends FrameLayout implements ViewTreeObserver.OnGlobalFocusChangeListener, ViewTreeObserver.OnDrawListener {
     private FocusDrawer mFocusDrawer;
     private View mFocused;
+    private Rect mClipCanvas;
 
     public FocusLampContainer(Context context) {
         this(context, null);
@@ -79,6 +80,13 @@ public class FocusLampContainer extends FrameLayout implements ViewTreeObserver.
         if (mFocusDrawer != null && mFocused != null) {
             mFocusDrawer.drawFocusFrame(mFocused);
         }
+    }
+
+    /**
+     * Clip the canvas to draw
+     */
+    public void clipCanvas(Rect canvas) {
+        this.mClipCanvas = canvas;
     }
 
     /**
@@ -198,7 +206,14 @@ public class FocusLampContainer extends FrameLayout implements ViewTreeObserver.
                 canvas.drawColor(Color.TRANSPARENT);
                 isDirty = false;
             } else if (mCurDrawable != null) {
-                mCurDrawable.drawFocusFrame(canvas, mCurrentRect);
+                if (mClipCanvas != null) {
+                    canvas.save();
+                    canvas.clipRect(mClipCanvas);
+                    mCurDrawable.drawFocusLamp(canvas, mCurrentRect);
+                    canvas.restore();
+                } else {
+                    mCurDrawable.drawFocusLamp(canvas, mCurrentRect);
+                }
             }
         }
     }

@@ -26,8 +26,8 @@ import java.lang.ref.WeakReference;
 /**
  * A helper class to change the background drawable of a wallpaper.
  * <p>
- * Call {@link #setupActivity(ComponentActivity, Drawable)} to bind a target activity and a default display drawable
- * Call {@link #setupView(ViewGroup, Drawable)}  to bind a target viewGroup and a default display drawable
+ * Call {@link #setTarget(ComponentActivity, Drawable)} to bind a target activity and a default display drawable
+ * Call {@link #setTarget(ViewGroup, Drawable)}  to bind a target viewGroup and a default display drawable
  * Call {@link #setTransitionDuration(int)} to set the length of drawable transition.
  * Call {@link #setTransitionDelay(int)} to set the delay time of drawable transition.
  * Call {@link #setColorMask(int)} to set a color mask layer overlay the wallpaper.
@@ -37,16 +37,16 @@ import java.lang.ref.WeakReference;
 public class WallpaperHelper implements LifecycleObserver {
     private static final int MSG_REFRESH_IMAGE = 0x0001;
     private Drawable[] mDrawables = new Drawable[2];
+    private WeakReference<ComponentActivity> mHost;
+    private WeakReference<ViewGroup> mViewHost;
+    private boolean isHostAlive = false;
+    private boolean isViewAlive = false;
+    private int mTransitionDelay = 500;
+    private int mTransitionDuration = 500;
     private boolean hasColorMask;
     private int mMaskColor;
     private Handler mHandler;
-    private WeakReference<ComponentActivity> mHost;
-    private int mTransitionDelay = 500;
-    private int mTransitionDuration = 500;
-    private boolean isHostAlive = false;
-    private boolean isViewAlive = false;
     private RatioDrawableWrapper.AlignMode mAlignMode = null;
-    private WeakReference<ViewGroup> mViewHost;
 
     /**
      * Bind a target activity and set a default display drawable
@@ -54,7 +54,7 @@ public class WallpaperHelper implements LifecycleObserver {
      * @param activity         The target activity which host the vision
      * @param defaultWallpaper The default drawable to display, maybe null
      */
-    public void setupActivity(ComponentActivity activity, @Nullable Drawable defaultWallpaper) {
+    public void setTarget(ComponentActivity activity, @Nullable Drawable defaultWallpaper) {
         isHostAlive = true;
         mHost = new WeakReference<>(activity);
         activity.getLifecycle().addObserver(this);
@@ -75,7 +75,7 @@ public class WallpaperHelper implements LifecycleObserver {
      * @param viewGroup        The target viewGroup who to display the drawable
      * @param defaultWallpaper The default drawable to display, maybe null
      */
-    public void setupView(ViewGroup viewGroup, @Nullable Drawable defaultWallpaper) {
+    public void setTarget(ViewGroup viewGroup, @Nullable Drawable defaultWallpaper) {
         isViewAlive = true;
         mViewHost = new WeakReference<>(viewGroup);
         // prepare the vision
@@ -264,7 +264,7 @@ public class WallpaperHelper implements LifecycleObserver {
 
     private void checkInit() {
         if (isHostAlive() && isViewAlive()) {
-            throw new RuntimeException("A WallpaperHelp instance can only have one host, you must call one of setupActivity or setupView !");
+            throw new RuntimeException("A WallpaperHelp instance can only have one host, you must call one of setTarget or setTarget !");
         }
     }
 

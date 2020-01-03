@@ -32,7 +32,7 @@ public class FocusImageDrawable implements FocusLampDrawable {
     }
 
     @Override
-    public void drawFocusFrame(Canvas canvas, Rect focusRect) {
+    public void drawFocusLamp(Canvas canvas, Rect focusRect) {
         int x = (focusRect.right - focusRect.left - mWidth) / 2 + focusRect.left;
         int y = (focusRect.bottom - focusRect.top - mHeight) / 2 + focusRect.top;
         canvas.drawBitmap(mImage, x, y, null);

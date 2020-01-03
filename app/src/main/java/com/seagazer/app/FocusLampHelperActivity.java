@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.seagazer.lib.util.DensityConverter;
 import com.seagazer.lib.widget.FocusLampDrawable;
 import com.seagazer.lib.widget.FocusLampHelper;
 import com.seagazer.lib.widget.FocusRoundRectDrawable;
@@ -24,10 +25,10 @@ public class FocusLampHelperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_focuslamp);
         FocusLampHelper helper = new FocusLampHelper();
-        helper.setupActivity(this, null);
-        helper.addFocusDrawable(AppCompatButton.class, new FocusRoundRectDrawable(0, 4, Color.RED));
-        helper.addFocusDrawable(ImageView.class, new CustomRoundRectDrawable());
-//        helper.addDefaultFocusDrawable(new ImageFocusDrawable(getResources().getDrawable(R.mipmap.ic_launcher), 150, 150));
+        helper.setTarget(this, new Rect(0, 0, DensityConverter.dp2px(this, 516), DensityConverter.dp2px(this, 292)));
+        helper.addFocusDrawable(AppCompatButton.class, new CustomRoundRectDrawable());
+        helper.addFocusDrawable(ImageView.class, new FocusRoundRectDrawable(0, 4, Color.RED));
+        // helper.addDefaultFocusDrawable(new ImageFocusDrawable(getResources().getDrawable(R.mipmap.ic_launcher), 150, 150));
     }
 
     class CustomRoundRectDrawable implements FocusLampDrawable {
@@ -36,14 +37,14 @@ public class FocusLampHelperActivity extends AppCompatActivity {
         {
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(6);
-            paint.setColor(Color.RED);
+            paint.setColor(Color.GREEN);
         }
 
         private Path path = new Path();
         private RectF rectF = new RectF();
 
         @Override
-        public void drawFocusFrame(Canvas canvas, Rect focusRect) {
+        public void drawFocusLamp(Canvas canvas, Rect focusRect) {
             rectF.set(focusRect);
             path.reset();
             int radius = 50;

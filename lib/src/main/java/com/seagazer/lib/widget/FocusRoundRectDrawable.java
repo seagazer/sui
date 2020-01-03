@@ -29,7 +29,7 @@ public class FocusRoundRectDrawable implements FocusLampDrawable {
     }
 
     @Override
-    public void drawFocusFrame(Canvas canvas, Rect focusRect) {
+    public void drawFocusLamp(Canvas canvas, Rect focusRect) {
         mRectF.set(focusRect);
         canvas.drawRoundRect(mRectF, mRadius, mRadius, mPaint);
     }

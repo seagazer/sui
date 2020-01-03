@@ -23,7 +23,7 @@ public class FocusCircleDrawable implements FocusLampDrawable {
     }
 
     @Override
-    public void drawFocusFrame(Canvas canvas, Rect focusRect) {
+    public void drawFocusLamp(Canvas canvas, Rect focusRect) {
         int width = focusRect.right - focusRect.left;
         int height = focusRect.bottom - focusRect.top;
         if (width != height) {
