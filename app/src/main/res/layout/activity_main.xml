@@ -25,5 +25,13 @@
             android:onClick="onClick"
             android:text="Wallpaper"
             android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="Camera"
+            android:textAllCaps="false" />
     </LinearLayout>
 </ScrollView>

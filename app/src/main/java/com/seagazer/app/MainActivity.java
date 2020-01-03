@@ -6,8 +6,6 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.seagazer.lib.widget.WallpaperHelper;
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -23,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.wallpaper:
                 startActivity(new Intent(this, WallpaperActivity.class));
+                break;
+            case R.id.camera:
+                startActivity(new Intent(this, CameraActivity.class));
                 break;
         }
     }

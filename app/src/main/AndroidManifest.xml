@@ -18,8 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WallpaperActivity" />
         <activity android:name=".FocusLampHelperActivity" />
+        <activity android:name=".WallpaperActivity" />
+        <activity android:name=".CameraActivity"/>
     </application>
 
 </manifest>
