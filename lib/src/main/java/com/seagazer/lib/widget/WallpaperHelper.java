@@ -40,7 +40,7 @@ public class WallpaperHelper implements LifecycleObserver {
     private static final int MSG_REFRESH_IMAGE = 0x0001;
     private Drawable[] mDrawables = new Drawable[2];
     private WeakReference<ComponentActivity> mHost;
-    private WeakReference<ViewGroup> mViewHost;
+    private WeakReference<View> mViewHost;
     private boolean isHostAlive = false;
     private boolean isViewAlive = false;
     private int mTransitionDelay = 500;
@@ -72,24 +72,24 @@ public class WallpaperHelper implements LifecycleObserver {
     }
 
     /**
-     * Bind a target viewGroup and set a default display drawable
+     * Bind a target view and set a default display drawable
      *
-     * @param viewGroup        The target viewGroup who to display the drawable
+     * @param view        The target view who to display the drawable
      * @param defaultWallpaper The default drawable to display, maybe null
      */
-    public void setTarget(ViewGroup viewGroup, @Nullable Drawable defaultWallpaper) {
+    public void setTarget(View view, @Nullable Drawable defaultWallpaper) {
         isViewAlive = true;
-        mViewHost = new WeakReference<>(viewGroup);
+        mViewHost = new WeakReference<>(view);
         // prepare the vision
         if (defaultWallpaper != null) {
             mDrawables[0] = defaultWallpaper;
-            viewGroup.setBackground(mDrawables[0]);
+            view.setBackground(mDrawables[0]);
         } else {
             mDrawables[0] = new ColorDrawable(Color.TRANSPARENT);
         }
         // prepare a handler to handle the message of drawable changed
         prepareHandler();
-        viewGroup.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+        view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
             public void onViewAttachedToWindow(View v) {
                 isViewAlive = true;
