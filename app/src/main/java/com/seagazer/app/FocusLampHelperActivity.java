@@ -25,7 +25,7 @@ public class FocusLampHelperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_focuslamp);
         FocusLampHelper helper = new FocusLampHelper();
-        helper.setTarget(this, new Rect(0, 0, DensityConverter.dp2px(this, 516), DensityConverter.dp2px(this, 292)));
+        helper.attach(this, new Rect(0, 0, DensityConverter.dp2px(this, 516), DensityConverter.dp2px(this, 292)));
         helper.addFocusDrawable(AppCompatButton.class, new CustomRoundRectDrawable());
         helper.addFocusDrawable(ImageView.class, new FocusRoundRectDrawable(0, 4, Color.RED));
         // helper.addDefaultFocusDrawable(new ImageFocusDrawable(getResources().getDrawable(R.mipmap.ic_launcher), 150, 150));

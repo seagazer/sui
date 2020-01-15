@@ -26,7 +26,7 @@ import java.util.Set;
  * A helper class to bind the displaying activity, so that it can auto draw focusDrawable when focus changed.
  * If you use frameLayout as the rootView, you can also use {@link FocusLampContainer} instead.
  * <p>
- * Call {@link #setTarget(ComponentActivity, View)} or {@link #setTarget(ComponentActivity, Rect)} to bind
+ * Call {@link #attach(ComponentActivity, View)} or {@link #attach(ComponentActivity, Rect)} to bind
  * a support activity when the activity onCreate, so it can auto handle the focus frame changed.
  * <p>
  * Call {@link #addDefaultFocusDrawable(FocusLampDrawable)} to setup a default focusDrawable.
@@ -57,7 +57,7 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
      *                 For example, you set a view here, if the newFocus is out of the drawRect of
      *                 this view, we will not draw the focusDrawable.
      */
-    public void setTarget(@NonNull ComponentActivity activity, @Nullable View drawArea) {
+    public void attach(@NonNull ComponentActivity activity, @Nullable View drawArea) {
         if (mHost != null) {
             throw new RuntimeException("You have set a target activity, this helper only support one target!");
         }
@@ -81,7 +81,7 @@ public class FocusLampHelper implements ViewTreeObserver.OnGlobalFocusChangeList
      *                 For example, you set a rect here, if the newFocus is out of this rect,
      *                 the framework will not draw the focusDrawable.
      */
-    public void setTarget(@NonNull ComponentActivity activity, @Nullable Rect drawArea) {
+    public void attach(@NonNull ComponentActivity activity, @Nullable Rect drawArea) {
         if (mHost != null) {
             throw new RuntimeException("You have set a target activity, this helper only support one target!");
         }

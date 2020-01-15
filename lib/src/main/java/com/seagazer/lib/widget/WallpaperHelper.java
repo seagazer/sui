@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.DrawableRes;
@@ -26,8 +25,8 @@ import java.lang.ref.WeakReference;
 /**
  * A helper class to change the background drawable of a wallpaper.
  * <p>
- * Call {@link #setTarget(ComponentActivity, Drawable)} to bind a target activity and a default display drawable.
- * Call {@link #setTarget(ViewGroup, Drawable)}  to bind a target viewGroup and a default display drawable.
+ * Call {@link #attach(ComponentActivity, Drawable)} to bind a target activity and a default display drawable.
+ * Call {@link #attach(View, Drawable)}  to bind a target viewGroup and a default display drawable.
  * Call {@link #setTransitionDuration(int)} to set the length of drawable transition.
  * Call {@link #setTransitionDelay(int)} to set the delay time of drawable transition.
  * Call {@link #setColorMask(int)} to set a color mask layer overlay the wallpaper.
@@ -49,6 +48,7 @@ public class WallpaperHelper implements LifecycleObserver {
     private int mMaskColor;
     private Handler mHandler;
     private RatioDrawableWrapper.AlignMode mAlignMode = null;
+    private boolean isCancel;
 
     /**
      * Bind a target activity and set a default display drawable
@@ -56,7 +56,7 @@ public class WallpaperHelper implements LifecycleObserver {
      * @param activity         The target activity which host the vision
      * @param defaultWallpaper The default drawable to display, maybe null
      */
-    public void setTarget(ComponentActivity activity, @Nullable Drawable defaultWallpaper) {
+    public void attach(ComponentActivity activity, @Nullable Drawable defaultWallpaper) {
         isHostAlive = true;
         mHost = new WeakReference<>(activity);
         activity.getLifecycle().addObserver(this);
@@ -74,10 +74,10 @@ public class WallpaperHelper implements LifecycleObserver {
     /**
      * Bind a target view and set a default display drawable
      *
-     * @param view        The target view who to display the drawable
+     * @param view             The target view who to display the drawable
      * @param defaultWallpaper The default drawable to display, maybe null
      */
-    public void setTarget(View view, @Nullable Drawable defaultWallpaper) {
+    public void attach(View view, @Nullable Drawable defaultWallpaper) {
         isViewAlive = true;
         mViewHost = new WeakReference<>(view);
         // prepare the vision
@@ -111,6 +111,9 @@ public class WallpaperHelper implements LifecycleObserver {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == MSG_REFRESH_IMAGE) {
+                    if (isCancel) {
+                        return;
+                    }
                     if (mDrawables[1] != null) {
                         mDrawables[0] = mDrawables[1];
                     }
@@ -190,6 +193,7 @@ public class WallpaperHelper implements LifecycleObserver {
      */
     public void setWallpaper(@NonNull Drawable drawable) {
         checkInit();
+        isCancel = false;
         mHandler.removeMessages(MSG_REFRESH_IMAGE);
         if (isHostAlive() || isViewAlive()) {
             RatioDrawableWrapper drawableWrapper = new RatioDrawableWrapper(drawable, mAlignMode);
@@ -198,6 +202,13 @@ public class WallpaperHelper implements LifecycleObserver {
             }
             mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_REFRESH_IMAGE, drawableWrapper), mTransitionDelay);
         }
+    }
+
+    /**
+     * Cancel the prepare wallPaper to set
+     */
+    public void cancel() {
+        isCancel = true;
     }
 
     /**
@@ -269,7 +280,7 @@ public class WallpaperHelper implements LifecycleObserver {
     private void checkInit() {
         if (isHostAlive() && isViewAlive()) {
             throw new RuntimeException("A WallpaperHelp instance can only have one host," +
-                    " you must call one of setTarget or setTarget !");
+                    " you must call one of attach or attach !");
         }
     }
 
