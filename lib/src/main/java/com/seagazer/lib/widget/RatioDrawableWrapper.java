@@ -43,7 +43,7 @@ public class RatioDrawableWrapper extends Drawable {
      * @param drawable the content drawable
      * @param mode     the mode to clip drawable, default is align start if not set this mode
      */
-    RatioDrawableWrapper(Drawable drawable, @Nullable AlignMode mode) {
+    public RatioDrawableWrapper(Drawable drawable, @Nullable AlignMode mode) {
         this.mDrawable = drawable;
         this.mAlignMode = mode == null ? AlignMode.START : mode;
     }
