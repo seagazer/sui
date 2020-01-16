@@ -2,11 +2,8 @@ package com.seagazer.lib.widget;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -37,7 +34,7 @@ import java.lang.ref.WeakReference;
  */
 public class WallpaperHelper implements LifecycleObserver {
     private static final int MSG_REFRESH_IMAGE = 0x0001;
-    private Drawable[] mDrawables = new Drawable[2];
+    private CrossFadeDrawable mDrawable;
     private WeakReference<ComponentActivity> mHost;
     private WeakReference<View> mViewHost;
     private boolean isHostAlive = false;
@@ -60,12 +57,11 @@ public class WallpaperHelper implements LifecycleObserver {
         isHostAlive = true;
         mHost = new WeakReference<>(activity);
         activity.getLifecycle().addObserver(this);
+        mDrawable = new CrossFadeDrawable();
+        activity.getWindow().setBackgroundDrawable(mDrawable);
         // prepare the vision
         if (defaultWallpaper != null) {
-            mDrawables[0] = defaultWallpaper;
-            activity.getWindow().setBackgroundDrawable(mDrawables[0]);
-        } else {
-            mDrawables[0] = new ColorDrawable(Color.TRANSPARENT);
+            mDrawable.fadeChange(defaultWallpaper, mTransitionDuration);
         }
         // prepare a handler to handle the message of drawable changed
         prepareHandler();
@@ -80,12 +76,11 @@ public class WallpaperHelper implements LifecycleObserver {
     public void attach(View view, @Nullable Drawable defaultWallpaper) {
         isViewAlive = true;
         mViewHost = new WeakReference<>(view);
+        mDrawable = new CrossFadeDrawable();
+        view.setBackground(mDrawable);
         // prepare the vision
         if (defaultWallpaper != null) {
-            mDrawables[0] = defaultWallpaper;
-            view.setBackground(mDrawables[0]);
-        } else {
-            mDrawables[0] = new ColorDrawable(Color.TRANSPARENT);
+            mDrawable.fadeChange(defaultWallpaper, mTransitionDuration);
         }
         // prepare a handler to handle the message of drawable changed
         prepareHandler();
@@ -101,6 +96,9 @@ public class WallpaperHelper implements LifecycleObserver {
                 if (mHandler != null) {
                     mHandler.removeCallbacksAndMessages(null);
                 }
+                if (mDrawable != null) {
+                    mDrawable.release();
+                }
             }
         });
     }
@@ -114,19 +112,12 @@ public class WallpaperHelper implements LifecycleObserver {
                     if (isCancel) {
                         return;
                     }
-                    if (mDrawables[1] != null) {
-                        mDrawables[0] = mDrawables[1];
-                    }
                     Drawable newDrawable = (Drawable) msg.obj;
-                    mDrawables[1] = newDrawable;
-                    TransitionDrawable transitionDrawable = new TransitionDrawable(mDrawables);
                     if (isHostAlive()) {
-                        mHost.get().getWindow().setBackgroundDrawable(transitionDrawable);
-                        transitionDrawable.startTransition(mTransitionDuration);
+                        mDrawable.fadeChange(newDrawable, mTransitionDuration);
                     }
                     if (isViewAlive()) {
-                        mViewHost.get().setBackground(transitionDrawable);
-                        transitionDrawable.startTransition(mTransitionDuration);
+                        mDrawable.fadeChange(newDrawable, mTransitionDuration);
                     }
                 }
             }
@@ -151,6 +142,9 @@ public class WallpaperHelper implements LifecycleObserver {
         if (mHost != null && mHost.get() != null) {
             mHost.get().getLifecycle().removeObserver(this);
             mHost.clear();
+        }
+        if (mDrawable != null) {
+            mDrawable.release();
         }
     }
 

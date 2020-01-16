@@ -7,9 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
@@ -45,9 +43,9 @@ public class WallpaperView extends FrameLayout {
     private static final int ALIGN_MODE_END = 2;
     private static final int MAX_RIPPLE_COUNT = 10;
     private static final int RIPPLE_REFRESH_TIME = 30;
+    private CrossFadeDrawable mDrawable;
     private int mTransitionDuration;
     private int mTransitionDelay;
-    private Drawable[] mDrawables = new Drawable[2];
     private boolean hasColorMask;
     private int mFilterColor;
     private List<Ripple> mRipples = new ArrayList<>();
@@ -74,12 +72,11 @@ public class WallpaperView extends FrameLayout {
         hasColorMask = ta.getBoolean(R.styleable.WallpaperView_isColorMask, false);
         int alignMode = ta.getInt(R.styleable.WallpaperView_alignMode, 0);
         ta.recycle();
+        mDrawable = new CrossFadeDrawable();
+        setBackground(mDrawable);
         if (drawable != null) {
-            mDrawables[0] = drawable;
-        } else {
-            mDrawables[0] = new ColorDrawable(getResources().getColor(R.color.brown_900));
+            mDrawable.fadeChange(drawable, mTransitionDuration);
         }
-        setBackground(mDrawables[0]);
         if (alignMode == ALIGN_MODE_START) {
             mAlignMode = RatioDrawableWrapper.AlignMode.START;
         } else if (alignMode == ALIGN_MODE_CENTER) {
@@ -176,17 +173,11 @@ public class WallpaperView extends FrameLayout {
                 @Override
                 public void handleMessage(Message msg) {
                     if (msg.what == MSG_REFRESH_IMAGE) {
-                        if (mDrawables[1] != null) {
-                            mDrawables[0] = mDrawables[1];
-                        }
                         Drawable newDrawable = (Drawable) msg.obj;
-                        mDrawables[1] = newDrawable;
-                        final TransitionDrawable transitionDrawable = new TransitionDrawable(mDrawables);
                         WallpaperView.this.post(new Runnable() {
                             @Override
                             public void run() {
-                                setBackground(transitionDrawable);
-                                transitionDrawable.startTransition(mTransitionDuration);
+                                mDrawable.fadeChange(newDrawable, mTransitionDuration);
                             }
                         });
                     } else if (msg.what == MSG_REFRESH_RIPPLE) {
@@ -205,6 +196,9 @@ public class WallpaperView extends FrameLayout {
         mThread.quit();
         if (isRipple) {
             mRipples.clear();
+        }
+        if (mDrawable != null) {
+            mDrawable.release();
         }
     }
 
