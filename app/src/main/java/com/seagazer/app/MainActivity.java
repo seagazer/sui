@@ -6,6 +6,8 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.seagazer.app.recyclerview.RecyclerView;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -24,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.camera:
                 startActivity(new Intent(this, CameraActivity.class));
+                break;
+            case R.id.recycler_view:
+                startActivity(new Intent(this, RecyclerViewActivity.class));
                 break;
         }
     }
