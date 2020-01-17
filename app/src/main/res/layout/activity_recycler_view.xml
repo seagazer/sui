@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     tools:context="com.seagazer.app.RecyclerViewActivity">
 
-    <com.seagazer.app.recyclerview.RecyclerView
-        android:id="@+id/recycler_view"
+    <com.seagazer.app.recyclerview.ListView
+        android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true" />
