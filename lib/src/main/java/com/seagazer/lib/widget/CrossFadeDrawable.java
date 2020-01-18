@@ -6,7 +6,6 @@ import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
@@ -19,13 +18,16 @@ import androidx.annotation.Nullable;
  * Call {@link #fadeChange(Drawable, int)} to change the resource.
  */
 public class CrossFadeDrawable extends Drawable {
-    private Rect mRect = new Rect();
     private Drawable mFront;
     private Drawable mBackground;
     private ValueAnimator mAnimator;
     private float mAnimPosition;
 
     public CrossFadeDrawable() {
+        initAnimator();
+    }
+
+    private void initAnimator() {
         mAnimator = ValueAnimator.ofFloat(0, 1);
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -51,6 +53,12 @@ public class CrossFadeDrawable extends Drawable {
         });
     }
 
+    public void initDrawable(@NonNull Drawable drawable) {
+        mFront = drawable;
+        mFront.setBounds(getBounds());
+        invalidateSelf();
+    }
+
     /**
      * Change the drawable resource with cross-fade
      *
@@ -58,11 +66,11 @@ public class CrossFadeDrawable extends Drawable {
      * @param duration the duration of cross-fade animation
      */
     public void fadeChange(Drawable drawable, int duration) {
-        if (mAnimator.isRunning()) {
+        if (mAnimator != null && mAnimator.isRunning()) {
             mAnimator.cancel();
         }
         mBackground = drawable;
-        mBackground.setBounds(mRect);
+        mBackground.setBounds(getBounds());
         mBackground.setAlpha(0);
         mAnimator.setDuration(duration);
         mAnimator.start();
@@ -105,12 +113,6 @@ public class CrossFadeDrawable extends Drawable {
         if (mBackground != null) {
             mBackground.setColorFilter(colorFilter);
         }
-    }
-
-    @Override
-    public void setBounds(int left, int top, int right, int bottom) {
-        super.setBounds(left, top, right, bottom);
-        mRect.set(left, top, right, bottom);
     }
 
     @Override
