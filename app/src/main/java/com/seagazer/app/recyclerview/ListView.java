@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Scroller;
 
 import com.seagazer.app.R;
+import com.seagazer.lib.util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,8 +80,8 @@ public class ListView extends ViewGroup {
 
     private int sumArray(int[] array, int firstPosition, int count) {
         int sum = 0;
-        count += firstPosition;
-        for (int i = firstPosition; i < count; i++) {
+        int last = firstPosition + count;
+        for (int i = firstPosition; i < last; i++) {
             sum += array[i];
         }
         return sum;
@@ -125,7 +126,7 @@ public class ListView extends ViewGroup {
         view.setTag(R.id.view_tag_id, itemType);
         view.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
-        addView(view, 0);
+        addView(view);
         return view;
     }
 
@@ -149,6 +150,7 @@ public class ListView extends ViewGroup {
     public void computeScroll() {
         if (scroller.computeScrollOffset()) {
             int currY = scroller.getCurrY();
+            Logger.d("last=" + lastScrollY + ", cur=" + currY + ", dy=" + (currY - lastScrollY));
             scrollBy(0, currY - lastScrollY);
             lastScrollY = currY;
         }
@@ -159,12 +161,13 @@ public class ListView extends ViewGroup {
         if (velocityTracker == null) {
             velocityTracker = VelocityTracker.obtain();
         }
-        velocityTracker.addMovement(event);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                velocityTracker.addMovement(event);
                 scroller.forceFinished(true);
                 break;
             case MotionEvent.ACTION_MOVE:
+                velocityTracker.addMovement(event);
                 int y = (int) event.getY();
                 // last - current
                 int dy = lastY - y;
@@ -185,7 +188,7 @@ public class ListView extends ViewGroup {
         return true;
     }
 
-    private int scrollBounds(int scrollY) {
+    private int fixScrollY(int scrollY) {
         // 上滑
         if (scrollY > 0) {
             scrollY = Math.min(scrollY, sumArray(childHeights, firstPosition, childHeights.length - firstPosition) - height);
@@ -201,7 +204,7 @@ public class ListView extends ViewGroup {
     public void scrollBy(int x, int y) {
         scrollY += y;
         // 修正边界，顶部和底部不能继续滑动
-        scrollY = scrollBounds(scrollY);
+        scrollY = fixScrollY(scrollY);
         // 上滑
         if (scrollY > 0) {
             // 上滑移除，上滑加载，
@@ -236,10 +239,16 @@ public class ListView extends ViewGroup {
         } else {
 
         }
-        repositionViews();
+        layoutChild();
     }
 
-    private void repositionViews() {
+    //data高度 - scrollY
+    private int getFillHeight() {
+        return sumArray(childHeights, firstPosition, viewList.size()) - scrollY;
+    }
+
+
+    private void layoutChild() {
         int left = 0, top, right = width, bottom, i;
         top = -scrollY;
         i = firstPosition;
@@ -255,11 +264,6 @@ public class ListView extends ViewGroup {
         super.removeView(view);
         int viewType = (int) view.getTag(R.id.view_tag_id);
         recycler.put(view, viewType);
-    }
-
-    //data高度 - scrollY
-    private int getFillHeight() {
-        return sumArray(childHeights, firstPosition, viewList.size()) - scrollY;
     }
 
     public interface Adapter {
