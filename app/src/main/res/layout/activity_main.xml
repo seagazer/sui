@@ -33,6 +33,15 @@
             android:onClick="onClick"
             android:text="Camera"
             android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/roll_3d"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="Roll_3D"
+            android:textAllCaps="false" />
+
         <Button
             android:id="@+id/list_view"
             android:layout_width="match_parent"

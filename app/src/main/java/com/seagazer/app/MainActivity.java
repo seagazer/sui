@@ -25,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.camera:
                 startActivity(new Intent(this, CameraActivity.class));
                 break;
+            case R.id.roll_3d:
+                startActivity(new Intent(this, Roll3DActivity.class));
+                break;
             case R.id.list_view:
                 startActivity(new Intent(this, RecyclerViewActivity.class));
                 break;

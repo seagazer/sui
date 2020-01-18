@@ -21,6 +21,7 @@
         <activity android:name=".FocusLampHelperActivity" />
         <activity android:name=".WallpaperActivity" />
         <activity android:name=".CameraActivity" />
+        <activity android:name=".Roll3DActivity" />
         <activity android:name=".RecyclerViewActivity"/>
     </application>
 
