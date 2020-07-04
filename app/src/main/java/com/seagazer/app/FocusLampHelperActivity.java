@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.seagazer.lib.util.DensityConverter;
 import com.seagazer.lib.widget.FocusLampDrawable;
 import com.seagazer.lib.widget.FocusLampHelper;
 import com.seagazer.lib.widget.FocusRoundRectDrawable;
@@ -25,7 +24,7 @@ public class FocusLampHelperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_focuslamp);
         FocusLampHelper helper = new FocusLampHelper();
-        helper.attach(this, new Rect(0, 0, DensityConverter.dp2px(this, 516), DensityConverter.dp2px(this, 292)));
+        helper.attachView(this, null);
         helper.addFocusDrawable(AppCompatButton.class, new CustomRoundRectDrawable());
         helper.addFocusDrawable(ImageView.class, new FocusRoundRectDrawable(0, 4, Color.RED));
         // helper.addDefaultFocusDrawable(new ImageFocusDrawable(getResources().getDrawable(R.mipmap.ic_launcher), 150, 150));
