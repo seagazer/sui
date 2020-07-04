@@ -32,7 +32,7 @@ import java.util.List;
  * Call {@link #setTransitionDelay(int)}  to set the delay time of drawable transition.
  * Call {@link #setWallpaper(int)} or {@link #setWallpaper(Bitmap)} or {@link #setWallpaper(Drawable)}
  * to change a wallpaper.
- * Call {@link #setAlignMode(RatioDrawableWrapper.AlignMode)} to set the display mode if the drawable
+ * Call {@link #setAlignMode(AlignMode)} to set the display mode if the drawable
  * can not fill the vision.
  */
 public class WallpaperView extends FrameLayout {
@@ -52,7 +52,7 @@ public class WallpaperView extends FrameLayout {
     private boolean isRipple;
     private HandlerThread mThread;
     private Handler mHandler;
-    private RatioDrawableWrapper.AlignMode mAlignMode;
+    private AlignMode mAlignMode;
 
     public WallpaperView(Context context) {
         this(context, null);
@@ -78,11 +78,11 @@ public class WallpaperView extends FrameLayout {
             mDrawable.fadeChange(drawable, mTransitionDuration);
         }
         if (alignMode == ALIGN_MODE_START) {
-            mAlignMode = RatioDrawableWrapper.AlignMode.START;
+            mAlignMode = AlignMode.START;
         } else if (alignMode == ALIGN_MODE_CENTER) {
-            mAlignMode = RatioDrawableWrapper.AlignMode.CENTER;
+            mAlignMode = AlignMode.CENTER;
         } else if (alignMode == ALIGN_MODE_END) {
-            mAlignMode = RatioDrawableWrapper.AlignMode.END;
+            mAlignMode = AlignMode.END;
         }
         setWillNotDraw(false);
 
@@ -157,7 +157,7 @@ public class WallpaperView extends FrameLayout {
      *
      * @param alignMode the base line start to clip, default is align top
      */
-    public void setAlignMode(RatioDrawableWrapper.AlignMode alignMode) {
+    public void setAlignMode(AlignMode alignMode) {
         mAlignMode = alignMode;
     }
 

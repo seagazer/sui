@@ -20,48 +20,74 @@ import androidx.lifecycle.OnLifecycleEvent;
 import java.lang.ref.WeakReference;
 
 /**
- * A helper class to change the background drawable of a wallpaper.
+ * A helper class to change the background drawable of window or view, with the crossFade animation.
  * <p>
- * Call {@link #attach(ComponentActivity, Drawable)} to bind a target activity and a default display drawable.
- * Call {@link #attach(View, Drawable)}  to bind a target viewGroup and a default display drawable.
- * Call {@link #setTransitionDuration(int)} to set the length of drawable transition.
- * Call {@link #setTransitionDelay(int)} to set the delay time of drawable transition.
+ * Call {@link #attach(ComponentActivity, Drawable)} to setup a target activity and a default display drawable.
+ * Call {@link #attach(View, Drawable)}  to setup a target viewGroup and a default display drawable.
+ * Call {@link #setCrossFadeDuration(int)} to set the duration of crossFade animation.
+ * Call {@link #setCrossFadeDelay(int)} to set the delay time of crossFade animation.
  * Call {@link #setColorMask(int)} to set a color mask layer overlay the wallpaper.
  * Call {@link #setWallpaper(int)} or {@link #setWallpaper(Bitmap)} or {@link #setWallpaper(Drawable)}
  * to change a wallpaper.
- * Call {@link #setAlignMode(RatioDrawableWrapper.AlignMode)} to set the display mode if the drawable
+ * Call {@link #setAlignMode(AlignMode)} to set the display mode if the drawable
  * can not fill the vision.
  */
 public class WallpaperHelper implements LifecycleObserver {
     private static final int MSG_REFRESH_IMAGE = 0x0001;
     private CrossFadeDrawable mDrawable;
-    private WeakReference<ComponentActivity> mHost;
+    private WeakReference<ComponentActivity> mActivityHost;
     private WeakReference<View> mViewHost;
-    private boolean isHostAlive = false;
-    private boolean isViewAlive = false;
-    private int mTransitionDelay = 500;
-    private int mTransitionDuration = 500;
+    private boolean isActivityActivated = false;
+    private boolean isViewActivated = false;
+    private int mCrossFadeDelay = 500;
+    private int mCrossFadeDuration = 500;
     private boolean hasColorMask;
-    private int mMaskColor;
+    private int mOverlayMaskColor;
     private Handler mHandler;
-    private RatioDrawableWrapper.AlignMode mAlignMode = null;
+    private AlignMode mAlignMode = null;
     private boolean isCancel;
+
+    /**
+     * Default construct, then you should call {@link #attach(ComponentActivity, Drawable)} or {@link #attach(View, Drawable)} to attach a host.
+     */
+    public WallpaperHelper() {
+
+    }
+
+    /**
+     * @param host             The window of this host activity will display the drawable
+     * @param defaultWallpaper The default drawable to display, maybe null
+     */
+    public WallpaperHelper(ComponentActivity host, @Nullable Drawable defaultWallpaper) {
+        this.attach(host, defaultWallpaper);
+    }
+
+    /**
+     * @param host             The target view to display the drawable
+     * @param defaultWallpaper The default drawable to display, maybe null
+     */
+    public WallpaperHelper(View host, @Nullable Drawable defaultWallpaper) {
+        this.attach(host, defaultWallpaper);
+    }
 
     /**
      * Bind a target activity and set a default display drawable
      *
-     * @param activity         The target activity which host the vision
+     * @param activity         The window of this host activity will display the drawable
      * @param defaultWallpaper The default drawable to display, maybe null
      */
     public void attach(ComponentActivity activity, @Nullable Drawable defaultWallpaper) {
-        isHostAlive = true;
-        mHost = new WeakReference<>(activity);
+        if (isViewActivated) {
+            throw new RuntimeException("This wallpaperHelper had attached a view, it must only attach one host!");
+        }
+        isActivityActivated = true;
+        mActivityHost = new WeakReference<>(activity);
         activity.getLifecycle().addObserver(this);
         mDrawable = new CrossFadeDrawable();
+        // prepare the default drawable
         activity.getWindow().setBackgroundDrawable(mDrawable);
-        // prepare the vision
         if (defaultWallpaper != null) {
-            mDrawable.fadeChange(defaultWallpaper, mTransitionDuration);
+            mDrawable.fadeChange(defaultWallpaper, mCrossFadeDuration);
         }
         // prepare a handler to handle the message of drawable changed
         prepareHandler();
@@ -70,37 +96,44 @@ public class WallpaperHelper implements LifecycleObserver {
     /**
      * Bind a target view and set a default display drawable
      *
-     * @param view             The target view who to display the drawable
+     * @param view             The target view to display the drawable
      * @param defaultWallpaper The default drawable to display, maybe null
      */
     public void attach(View view, @Nullable Drawable defaultWallpaper) {
-        isViewAlive = true;
+        if (isActivityActivated) {
+            throw new RuntimeException("This wallpaperHelper had attached a activity, it must only attach one host!");
+        }
+        isViewActivated = true;
         mViewHost = new WeakReference<>(view);
         mDrawable = new CrossFadeDrawable();
+        // prepare the default drawable
         view.setBackground(mDrawable);
-        // prepare the vision
         if (defaultWallpaper != null) {
-            mDrawable.fadeChange(defaultWallpaper, mTransitionDuration);
+            mDrawable.fadeChange(defaultWallpaper, mCrossFadeDuration);
         }
         // prepare a handler to handle the message of drawable changed
         prepareHandler();
         view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
             public void onViewAttachedToWindow(View v) {
-                isViewAlive = true;
+                isViewActivated = true;
             }
 
             @Override
             public void onViewDetachedFromWindow(View v) {
-                isViewAlive = false;
-                if (mHandler != null) {
-                    mHandler.removeCallbacksAndMessages(null);
-                }
-                if (mDrawable != null) {
-                    mDrawable.release();
-                }
+                isViewActivated = false;
+                release();
             }
         });
+    }
+
+    private void release() {
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+        if (mDrawable != null) {
+            mDrawable.release();
+        }
     }
 
     @SuppressLint("HandlerLeak")
@@ -113,11 +146,8 @@ public class WallpaperHelper implements LifecycleObserver {
                         return;
                     }
                     Drawable newDrawable = (Drawable) msg.obj;
-                    if (isHostAlive()) {
-                        mDrawable.fadeChange(newDrawable, mTransitionDuration);
-                    }
-                    if (isViewAlive()) {
-                        mDrawable.fadeChange(newDrawable, mTransitionDuration);
+                    if (isActivityActivated() || isViewActivated()) {
+                        mDrawable.fadeChange(newDrawable, mCrossFadeDuration);
                     }
                 }
             }
@@ -126,25 +156,20 @@ public class WallpaperHelper implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     private void onResume() {
-        isHostAlive = true;
+        isActivityActivated = true;
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     private void onStop() {
-        isHostAlive = false;
+        isActivityActivated = false;
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private void onDestroy() {
-        if (mHandler != null) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
-        if (mHost != null && mHost.get() != null) {
-            mHost.get().getLifecycle().removeObserver(this);
-            mHost.clear();
-        }
-        if (mDrawable != null) {
-            mDrawable.release();
+        release();
+        if (mActivityHost != null && mActivityHost.get() != null) {
+            mActivityHost.get().getLifecycle().removeObserver(this);
+            mActivityHost.clear();
         }
     }
 
@@ -154,11 +179,11 @@ public class WallpaperHelper implements LifecycleObserver {
      * @param resource wallPaper
      */
     public void setWallpaper(@DrawableRes int resource) {
-        checkInit();
-        if (isHostAlive()) {
-            Drawable drawable = mHost.get().getResources().getDrawable(resource);
+        checkActivated();
+        if (isActivityActivated()) {
+            Drawable drawable = mActivityHost.get().getResources().getDrawable(resource);
             setWallpaper(drawable);
-        } else if (isViewAlive()) {
+        } else if (isViewActivated()) {
             Drawable drawable = mViewHost.get().getResources().getDrawable(resource);
             setWallpaper(drawable);
         }
@@ -170,11 +195,11 @@ public class WallpaperHelper implements LifecycleObserver {
      * @param bitmap wallPaper
      */
     public void setWallpaper(@NonNull Bitmap bitmap) {
-        checkInit();
-        if (isHostAlive()) {
-            BitmapDrawable drawable = new BitmapDrawable(mHost.get().getResources(), bitmap);
+        checkActivated();
+        if (isActivityActivated()) {
+            BitmapDrawable drawable = new BitmapDrawable(mActivityHost.get().getResources(), bitmap);
             setWallpaper(drawable);
-        } else if (isViewAlive()) {
+        } else if (isViewActivated()) {
             BitmapDrawable drawable = new BitmapDrawable(mViewHost.get().getResources(), bitmap);
             setWallpaper(drawable);
         }
@@ -186,15 +211,15 @@ public class WallpaperHelper implements LifecycleObserver {
      * @param drawable wallPaper
      */
     public void setWallpaper(@NonNull Drawable drawable) {
-        checkInit();
+        checkActivated();
         isCancel = false;
         mHandler.removeMessages(MSG_REFRESH_IMAGE);
-        if (isHostAlive() || isViewAlive()) {
+        if (isActivityActivated() || isViewActivated()) {
             RatioDrawableWrapper drawableWrapper = new RatioDrawableWrapper(drawable, mAlignMode);
             if (hasColorMask) {
-                drawableWrapper.setColorMask(mMaskColor);
+                drawableWrapper.setColorMask(mOverlayMaskColor);
             }
-            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_REFRESH_IMAGE, drawableWrapper), mTransitionDelay);
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_REFRESH_IMAGE, drawableWrapper), mCrossFadeDelay);
         }
     }
 
@@ -203,6 +228,7 @@ public class WallpaperHelper implements LifecycleObserver {
      */
     public void cancel() {
         isCancel = true;
+        mHandler.removeMessages(MSG_REFRESH_IMAGE);
     }
 
     /**
@@ -211,11 +237,8 @@ public class WallpaperHelper implements LifecycleObserver {
      * @param color the color of the mask layer
      */
     public void setColorMask(int color) {
-        checkInit();
-        if (isHostAlive() || isViewAlive()) {
-            hasColorMask = true;
-            mMaskColor = color;
-        }
+        hasColorMask = true;
+        mOverlayMaskColor = color;
     }
 
     /**
@@ -223,31 +246,23 @@ public class WallpaperHelper implements LifecycleObserver {
      *
      * @param delay duration
      */
-    public void setTransitionDelay(int delay) {
-        checkInit();
-        if (mTransitionDelay < mTransitionDuration) {
-            Log.w("WallpaperHelper",
-                    "[WARNING]: You should set the transitionDelay more than transitionDuration better !");
+    public void setCrossFadeDelay(int delay) {
+        if (mCrossFadeDelay < mCrossFadeDuration) {
+            Log.w(this.getClass().getSimpleName(), "[WARNING]: You should set the crossFadeDelay more than crossFadeDuration better!");
         }
-        if (isHostAlive() || isViewAlive()) {
-            mTransitionDelay = delay;
-        }
+        mCrossFadeDelay = delay;
     }
 
     /**
      * Set the transition animation duration
      *
-     * @param duration duration
+     * @param duration the duration of transition
      */
-    public void setTransitionDuration(int duration) {
-        checkInit();
-        if (mTransitionDelay < mTransitionDuration) {
-            Log.w("WallpaperHelper",
-                    "[WARNING]: You should set the transitionDelay more than transitionDuration better !");
+    public void setCrossFadeDuration(int duration) {
+        if (mCrossFadeDelay < mCrossFadeDuration) {
+            Log.w(this.getClass().getSimpleName(), "[WARNING]: You should set the crossFadeDelay more than crossFadeDuration better!");
         }
-        if (isHostAlive() || isViewAlive()) {
-            mTransitionDuration = duration;
-        }
+        mCrossFadeDuration = duration;
     }
 
     /**
@@ -256,25 +271,36 @@ public class WallpaperHelper implements LifecycleObserver {
      *
      * @param alignMode the base line start to clip, default is align top
      */
-    public void setAlignMode(RatioDrawableWrapper.AlignMode alignMode) {
-        checkInit();
+    public void setAlignMode(AlignMode alignMode) {
         mAlignMode = alignMode;
     }
 
-    // check current activity is activated
-    private boolean isHostAlive() {
-        return isHostAlive && mHost != null && mHost.get() != null;
+    /**
+     * Check current activity is activated
+     *
+     * @return true if the activity is activated and resume
+     */
+    private boolean isActivityActivated() {
+        return isActivityActivated && mActivityHost.get() != null;
     }
 
-    // check current view is activated
-    private boolean isViewAlive() {
-        return isViewAlive && mViewHost != null && mViewHost.get() != null;
+    /**
+     * Check current view is activated
+     *
+     * @return true if the view is notnull and attach to window
+     */
+    private boolean isViewActivated() {
+        return isViewActivated && mViewHost.get() != null;
     }
 
-    private void checkInit() {
-        if (isHostAlive() && isViewAlive()) {
-            throw new RuntimeException("A WallpaperHelp instance can only have one host," +
-                    " you must call one of attach or attach !");
+    /**
+     * Check the helper is attached
+     *
+     * @return true if the helper is attached and has a host
+     */
+    private void checkActivated() {
+        if (!(isActivityActivated || isViewActivated)) {
+            throw new RuntimeException("The wallpaperHelper has no host, you should attach a host first!");
         }
     }
 
