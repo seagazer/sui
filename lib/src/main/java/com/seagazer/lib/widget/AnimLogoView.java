@@ -25,8 +25,8 @@ import com.seagazer.lib.util.Logger;
 
 /**
  * 提供开屏logo动画效果
- * 可以通过调用{@link #setLogoName(String)}设置logo名称
- * 通过调用{@link #playAnimation()}开启logo动画
+ * 可以通过调用{@link #setLogoText(String)}设置logo名称
+ * 通过调用{@link #startAnimation()}开启logo动画
  */
 public class AnimLogoView extends View {
     private static final String DEFAULT_LOGO = "SEAGAZER";
@@ -51,6 +51,7 @@ public class AnimLogoView extends View {
     private boolean isAutoPlay;
     private int mWidth, mHeight;
     private boolean isShowGradient;
+    private int mLogoOffset;
 
     public AnimLogoView(Context context) {
         this(context, null);
@@ -72,6 +73,7 @@ public class AnimLogoView extends View {
         mGradientColor = ta.getColor(R.styleable.AnimLogoView_gradientColor, getResources().getColor(R.color.yellow_700));
         mTextPadding = ta.getDimensionPixelSize(R.styleable.AnimLogoView_textPadding, DEFAULT_TEXT_PADDING);
         mTextSize = ta.getDimensionPixelSize(R.styleable.AnimLogoView_textSize, getResources().getDimensionPixelOffset(R.dimen.logoTitle));
+        mLogoOffset = ta.getDimensionPixelOffset(R.styleable.AnimLogoView_verticalOffset, 0);
         ta.recycle();
         if (TextUtils.isEmpty(logoName)) {
             logoName = DEFAULT_LOGO;// default logo
@@ -169,14 +171,28 @@ public class AnimLogoView extends View {
         super.onDetachedFromWindow();
     }
 
-    public Animator getAnimator() {
-        return mOffsetAnimator;
+    /**
+     * 监听offset动画状态
+     *
+     * @param listener AnimatorListener
+     */
+    public void addOffsetAnimListener(Animator.AnimatorListener listener) {
+        mOffsetAnimator.addListener(listener);
+    }
+
+    /**
+     * 监听gradient动画状态
+     *
+     * @param listener AnimatorListener
+     */
+    public void addGradientAnimListener(Animator.AnimatorListener listener) {
+        mGradientAnimator.addListener(listener);
     }
 
     /**
      * 开启动画
      */
-    public void playAnimation() {
+    public void startAnimation() {
         if (getVisibility() == VISIBLE) {
             if (mOffsetAnimator.isRunning()) {
                 mOffsetAnimator.cancel();
@@ -184,7 +200,7 @@ public class AnimLogoView extends View {
             isOffsetAnimEnd = false;
             mOffsetAnimator.start();
         } else {
-            Logger.w("The view is not visible, not to playFile the animation .");
+            Logger.w("The view is not visible, not to play the animation .");
         }
     }
 
@@ -198,7 +214,7 @@ public class AnimLogoView extends View {
     }
 
     private void initLogoCoordinate() {
-        float centerY = mHeight / 2f + mPaint.getTextSize() / 2;
+        float centerY = mHeight / 2f + mPaint.getTextSize() / 2 + mLogoOffset;
         // calculate the final xy of the text
         float totalLength = 0;
         for (int i = 0; i < mLogoTexts.size(); i++) {
@@ -259,7 +275,7 @@ public class AnimLogoView extends View {
      *
      * @param logoName logo名称
      */
-    public void setLogoName(String logoName) {
+    public void setLogoText(String logoName) {
         fillLogoTextArray(logoName);
         // if set the new logoName, should refresh the coordinate again
         initLogoCoordinate();
@@ -297,7 +313,7 @@ public class AnimLogoView extends View {
      *
      * @param isShowGradient 是否显示logo渐变动效
      */
-    public void isShowGradient(boolean isShowGradient) {
+    public void setShowGradient(boolean isShowGradient) {
         this.isShowGradient = isShowGradient;
     }
 

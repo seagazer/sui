@@ -34,6 +34,7 @@
         <attr name="gradientColor" format="color" />
         <attr name="textSize" />
         <attr name="textColor" />
+        <attr name="verticalOffset" format="dimension" />
         <attr name="textPadding" format="dimension" />
         <attr name="showGradient" format="boolean" />
     </declare-styleable>
