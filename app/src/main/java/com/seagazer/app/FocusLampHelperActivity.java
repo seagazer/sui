@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.seagazer.sui.widget.FocusLampDrawable;
-import com.seagazer.sui.widget.FocusLampHelper;
-import com.seagazer.sui.widget.FocusRoundRectDrawable;
+import com.seagazer.ui.widget.FocusLampDrawable;
+import com.seagazer.ui.widget.FocusLampHelper;
+import com.seagazer.ui.widget.FocusRoundRectDrawable;
 
 public class FocusLampHelperActivity extends AppCompatActivity {
 

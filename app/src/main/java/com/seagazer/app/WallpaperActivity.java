@@ -6,8 +6,8 @@ import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.seagazer.sui.widget.AlignMode;
-import com.seagazer.sui.widget.WallpaperHelper;
+import com.seagazer.ui.widget.AlignMode;
+import com.seagazer.ui.widget.WallpaperHelper;
 
 public class WallpaperActivity extends AppCompatActivity {
 

@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.seagazer.sui.widget.AnimLogoView;
+import com.seagazer.ui.widget.AnimLogoView;
 
 public class AnimLogoActivity extends AppCompatActivity {
 
