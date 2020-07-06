@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -13,6 +14,7 @@ import android.graphics.PointF;
 import android.graphics.Shader;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -20,8 +22,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import androidx.annotation.Nullable;
 
 import com.seagazer.ui.R;
-import com.seagazer.ui.util.Constants;
-import com.seagazer.ui.util.Logger;
+
 
 /**
  * 提供开屏logo动画效果
@@ -31,6 +32,11 @@ import com.seagazer.ui.util.Logger;
 public class AnimLogoView extends View {
     private static final String DEFAULT_LOGO = "SEAGAZER";
     private static final int DEFAULT_TEXT_PADDING = 10;
+    private static final int ANIM_LOGO_DURATION = 1500;
+    private static final int ANIM_LOGO_GRADIENT_DURATION = 1500;
+    private static final int ANIM_LOGO_TEXT_SIZE = 30;
+    private static final int ANIM_LOGO_TEXT_COLOR = Color.BLACK;
+    private static final int ANIM_LOGO_GRADIENT_COLOR = Color.YELLOW;
     private SparseArray<String> mLogoTexts = new SparseArray<>();
     private SparseArray<PointF> mQuietPoints = new SparseArray<>();
     private SparseArray<PointF> mRadonPoints = new SparseArray<>();
@@ -52,6 +58,7 @@ public class AnimLogoView extends View {
     private int mWidth, mHeight;
     private boolean isShowGradient;
     private int mLogoOffset;
+    private Animator.AnimatorListener mGradientListener;
 
     public AnimLogoView(Context context) {
         this(context, null);
@@ -67,12 +74,12 @@ public class AnimLogoView extends View {
         String logoName = ta.getString(R.styleable.AnimLogoView_logoName);
         isAutoPlay = ta.getBoolean(R.styleable.AnimLogoView_autoPlay, true);
         isShowGradient = ta.getBoolean(R.styleable.AnimLogoView_showGradient, false);
-        mOffsetDuration = ta.getInt(R.styleable.AnimLogoView_offsetAnimDuration, Constants.ANIM_LOGO_DURATION);
-        mGradientDuration = ta.getInt(R.styleable.AnimLogoView_gradientAnimDuration, Constants.ANIM_LOGO_GRADIENT_DURATION);
-        mTextColor = ta.getColor(R.styleable.AnimLogoView_textColor, getResources().getColor(R.color.textDefault));
-        mGradientColor = ta.getColor(R.styleable.AnimLogoView_gradientColor, getResources().getColor(R.color.yellow_700));
+        mOffsetDuration = ta.getInt(R.styleable.AnimLogoView_offsetAnimDuration, ANIM_LOGO_DURATION);
+        mGradientDuration = ta.getInt(R.styleable.AnimLogoView_gradientAnimDuration, ANIM_LOGO_GRADIENT_DURATION);
+        mTextColor = ta.getColor(R.styleable.AnimLogoView_textColor, ANIM_LOGO_TEXT_COLOR);
+        mGradientColor = ta.getColor(R.styleable.AnimLogoView_gradientColor, ANIM_LOGO_GRADIENT_COLOR);
         mTextPadding = ta.getDimensionPixelSize(R.styleable.AnimLogoView_textPadding, DEFAULT_TEXT_PADDING);
-        mTextSize = ta.getDimensionPixelSize(R.styleable.AnimLogoView_textSize, getResources().getDimensionPixelOffset(R.dimen.logoTitle));
+        mTextSize = ta.getDimensionPixelSize(R.styleable.AnimLogoView_textSize, ANIM_LOGO_TEXT_SIZE);
         mLogoOffset = ta.getDimensionPixelOffset(R.styleable.AnimLogoView_verticalOffset, 0);
         ta.recycle();
         if (TextUtils.isEmpty(logoName)) {
@@ -138,6 +145,9 @@ public class AnimLogoView extends View {
     // init the gradient animation
     private void initGradientAnimation(int width) {
         mGradientAnimator = ValueAnimator.ofInt(0, 2 * width);
+        if (mGradientListener != null) {
+            mGradientAnimator.addListener(mGradientListener);
+        }
         mGradientAnimator.setDuration(mGradientDuration);
         mGradientAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -186,7 +196,7 @@ public class AnimLogoView extends View {
      * @param listener AnimatorListener
      */
     public void addGradientAnimListener(Animator.AnimatorListener listener) {
-        mGradientAnimator.addListener(listener);
+        mGradientListener = listener;
     }
 
     /**
@@ -200,7 +210,7 @@ public class AnimLogoView extends View {
             isOffsetAnimEnd = false;
             mOffsetAnimator.start();
         } else {
-            Logger.w("The view is not visible, not to play the animation .");
+            Log.w("AnimLogoView", "The view is not visible, not to play the animation .");
         }
     }
 
