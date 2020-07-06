@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Scroller;
 
 import com.seagazer.app.R;
-import com.seagazer.lib.util.Logger;
+import com.seagazer.sui.util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;

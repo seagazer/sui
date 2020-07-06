@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.seagazer.lib.widget.CameraStudyView;
+import com.seagazer.sui.widget.CameraStudyView;
 
 public class CameraActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 

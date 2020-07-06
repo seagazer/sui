@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <com.seagazer.lib.widget.CameraStudyView
+    <com.seagazer.sui.widget.CameraStudyView
         android:id="@+id/camera_view"
         android:layout_width="300dp"
         android:layout_height="169dp"
